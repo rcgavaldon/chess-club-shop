@@ -6,9 +6,9 @@
 <title>Shop Admin — Production Queue</title>
 <style>
   :root{
-    --ink:#1d2233; --paper:#f6f3ea; --card:#fff; --navy:#242b47; --gold:#d9a441;
-    --gold-dark:#b8862e; --line:#e4ddcc; --muted:#6b7080;
-    --pending:#c07f13; --printing:#3763c9; --done:#3d9950; --pickedup:#6b7080; --cancelled:#c0392b;
+    --ink:#15251b; --paper:#f7f5ec; --card:#fff; --navy:#0e5230; --gold:#1a8049;
+    --gold-dark:#0e5230; --line:#dde6da; --muted:#5f6f63;
+    --pending:#b5822a; --printing:#1c6fb0; --done:#1a8049; --pickedup:#5f6f63; --cancelled:#b5432f;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{font-family:Georgia,serif; background:var(--paper); color:var(--ink); line-height:1.45; padding-bottom:80px;}
@@ -31,7 +31,7 @@
 
   .btn{border:none; border-radius:8px; padding:11px 16px; font-size:14px; cursor:pointer;
     font-family:'Consolas',monospace; font-weight:bold;}
-  .btn.gold{background:var(--gold); color:var(--navy);}
+  .btn.gold{background:var(--gold); color:#fff;}
   .btn.navy{background:var(--navy); color:var(--paper);}
   .btn.ghost{background:none; border:1px solid var(--line); color:var(--muted);}
   .btn.sm{padding:6px 10px; font-size:12px;}
@@ -43,7 +43,7 @@
   .tabs{display:flex; gap:6px; overflow-x:auto; margin-bottom:12px; -webkit-overflow-scrolling:touch;}
   .tab{flex:0 0 auto; background:var(--card); border:1px solid var(--line); border-radius:999px;
     padding:7px 14px; font-size:13px; cursor:pointer; font-family:'Consolas',monospace; white-space:nowrap;}
-  .tab.active{background:var(--navy); color:var(--gold); border-color:var(--navy);}
+  .tab.active{background:var(--navy); color:#fff; border-color:var(--navy);}
   .tab .n{opacity:.7;}
 
   /* ticket cards */
@@ -76,7 +76,7 @@
   .cchip{display:flex; align-items:center; gap:6px; border:1px solid var(--line); border-radius:999px;
     padding:5px 12px 5px 7px; font-size:13px; cursor:pointer; background:var(--paper); user-select:none;}
   .cchip .dot{width:16px; height:16px; border-radius:50%; border:1px solid rgba(0,0,0,.15);}
-  .cchip.on{border-color:var(--gold-dark); background:#f5ead2; font-weight:bold;}
+  .cchip.on{border-color:var(--gold-dark); background:#e8f1e8; font-weight:bold;}
   .hidden{display:none;}
   .toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--navy); color:var(--paper);
     padding:10px 20px; border-radius:999px; font-size:14px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:50;}

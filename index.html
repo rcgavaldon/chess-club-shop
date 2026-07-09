@@ -6,99 +6,125 @@
 <title>Chess Club Shop — 3D Prints</title>
 <style>
   :root{
-    --ink:#1d2233; --paper:#f6f3ea; --card:#ffffff; --navy:#242b47;
-    --gold:#d9a441; --gold-dark:#b8862e; --line:#e4ddcc; --muted:#6b7080;
+    --ink:#15251b; --paper:#f7f5ec; --card:#ffffff;
+    --green-deep:#0e5230; --green:#1a8049; --green-bright:#28a05e;
+    --green-tint:#e8f1e8; --cream:#f1eee1; --line:#dde6da; --muted:#5f6f63;
+    --danger:#b5432f;
+    --shadow:0 2px 6px rgba(14,82,48,.08), 0 8px 24px rgba(14,82,48,.05);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
   body{font-family:Georgia,'Times New Roman',serif; background:var(--paper); color:var(--ink); line-height:1.5;}
   .mono{font-family:'Consolas','Courier New',monospace;}
+  a{color:var(--green);}
 
   /* ---------- header ---------- */
   header{
-    background:var(--navy); color:var(--paper); padding:34px 18px 30px; text-align:center;
-    background-image:
-      linear-gradient(rgba(36,43,71,.94), rgba(36,43,71,.94)),
-      repeating-conic-gradient(#fff 0% 25%, transparent 0% 50%);
-    background-size:auto, 44px 44px;
+    position:relative; color:#fff; text-align:center; padding:40px 18px 34px; overflow:hidden;
+    background:var(--green-deep);
   }
-  header .knight{font-size:44px; line-height:1; color:var(--gold);}
-  header h1{font-size:clamp(28px,6vw,40px); letter-spacing:.5px; margin-top:6px;}
-  header p{color:#cfd4e6; font-size:15px; margin-top:6px;}
-  .price-strip{margin-top:14px; display:inline-flex; gap:8px; flex-wrap:wrap; justify-content:center;}
-  .price-strip span{background:rgba(217,164,65,.15); border:1px solid var(--gold); color:var(--gold);
-    border-radius:999px; padding:3px 12px; font-size:13px;}
+  header::before{ /* green/cream chessboard wash */
+    content:""; position:absolute; inset:0; opacity:.10;
+    background:repeating-conic-gradient(#fff 0% 25%, transparent 0% 50%);
+    background-size:52px 52px;
+  }
+  header > *{position:relative; z-index:1;}
+  header .knight{font-size:50px; line-height:1; filter:drop-shadow(0 2px 4px rgba(0,0,0,.3));}
+  header h1{font-size:clamp(30px,6.5vw,44px); letter-spacing:.5px; margin-top:4px;}
+  header .tag{color:#d6ead9; font-size:15px; margin-top:8px; font-style:italic;}
+  .price-strip{margin-top:18px; display:inline-flex; gap:9px; flex-wrap:wrap; justify-content:center;}
+  .price-strip span{background:rgba(255,255,255,.12); border:1.5px solid rgba(255,255,255,.55);
+    color:#fff; border-radius:999px; padding:4px 15px; font-size:14px; font-family:'Consolas',monospace; font-weight:bold;}
+  .price-strip .plus{background:#fff; color:var(--green-deep); border-color:#fff;}
+
+  /* board stripe divider */
+  .stripe{height:10px; background:repeating-linear-gradient(90deg, var(--green) 0 20px, var(--cream) 20px 40px);}
 
   /* ---------- nav ---------- */
-  nav{position:sticky; top:0; z-index:10; background:var(--card); border-bottom:2px solid var(--navy);
-    display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch;}
-  nav a{flex:0 0 auto; padding:12px 16px; text-decoration:none; color:var(--ink);
-    font-family:'Consolas',monospace; font-size:13px; white-space:nowrap; border-bottom:3px solid transparent;}
-  nav a:hover, nav a.active{border-bottom-color:var(--gold); color:var(--gold-dark);}
+  nav{position:sticky; top:0; z-index:10; background:rgba(255,255,255,.96); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line); display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch;
+    box-shadow:0 1px 4px rgba(14,82,48,.04);}
+  nav a{flex:0 0 auto; padding:13px 17px; text-decoration:none; color:var(--ink);
+    font-family:'Consolas',monospace; font-size:13px; white-space:nowrap; border-bottom:3px solid transparent; transition:.15s;}
+  nav a:hover{color:var(--green);}
+  nav a.active{border-bottom-color:var(--green); color:var(--green-deep); font-weight:bold;}
 
-  main{max-width:960px; margin:0 auto; padding:22px 16px 60px;}
-  section{margin-top:36px; scroll-margin-top:60px;}
-  h2{font-size:24px; display:flex; align-items:center; gap:10px;}
-  h2 .eyebrow{font-family:'Consolas',monospace; font-size:11px; letter-spacing:2px; color:var(--gold-dark);
-    text-transform:uppercase; display:block;}
-  .h2wrap{margin-bottom:14px;}
-  .sub{color:var(--muted); font-size:14px; margin-top:4px;}
+  main{max-width:980px; margin:0 auto; padding:26px 16px 60px;}
+  section{margin-top:42px; scroll-margin-top:64px;}
+  .h2wrap{margin-bottom:16px;}
+  .eyebrow{font-family:'Consolas',monospace; font-size:11px; letter-spacing:2.5px; color:var(--green);
+    text-transform:uppercase; display:block; margin-bottom:2px;}
+  h2{font-size:26px; color:var(--green-deep); display:flex; align-items:center; gap:10px;}
+  .sub{color:var(--muted); font-size:14.5px; margin-top:6px;}
+  .sub .mono{color:var(--green-deep); background:var(--green-tint); padding:1px 6px; border-radius:5px;}
 
   /* ---------- item cards ---------- */
-  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px;}
-  .item{background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden;
-    display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(29,34,51,.06);}
-  .item .pic{aspect-ratio:1/1; background:
-      repeating-conic-gradient(#eceadf 0% 25%, #f8f6ee 0% 50%);
-    background-size:36px 36px; display:flex; align-items:center; justify-content:center; position:relative;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr)); gap:16px;}
+  .item{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden;
+    display:flex; flex-direction:column; box-shadow:var(--shadow); transition:transform .15s, box-shadow .15s;}
+  .item:hover{transform:translateY(-3px); box-shadow:0 6px 14px rgba(14,82,48,.14), 0 14px 34px rgba(14,82,48,.10);}
+  .item .pic{aspect-ratio:1/1; position:relative; display:flex; align-items:center; justify-content:center;
+    background:var(--green-tint);
+    background-image:repeating-conic-gradient(#dcebdd 0% 25%, transparent 0% 50%); background-size:38px 38px;}
   .item .pic img{width:100%; height:100%; object-fit:cover;}
-  .item .pic .ph{color:#b9b29c; font-size:34px;}
-  .badge-code{position:absolute; top:8px; left:8px; background:var(--navy); color:var(--gold);
-    font-family:'Consolas',monospace; font-size:13px; font-weight:bold; padding:3px 9px; border-radius:6px;}
-  .badge-feat{position:absolute; top:8px; right:8px; background:var(--gold); color:var(--navy);
-    font-size:11px; font-weight:bold; padding:3px 8px; border-radius:6px; font-family:'Consolas',monospace;}
-  .item .info{padding:10px 12px 12px; display:flex; flex-direction:column; gap:4px; flex:1;}
-  .item .name{font-size:15px; font-weight:bold;}
+  .item .pic .ph{font-size:52px; color:#9dc3a6; filter:drop-shadow(0 2px 3px rgba(14,82,48,.12));}
+  .item .pic .ph-lbl{position:absolute; bottom:8px; font-family:'Consolas',monospace; font-size:9.5px;
+    letter-spacing:1px; color:#8aa891; text-transform:uppercase;}
+  .badge-code{position:absolute; top:9px; left:9px; background:var(--green-deep); color:#fff;
+    font-family:'Consolas',monospace; font-size:13px; font-weight:bold; padding:4px 10px; border-radius:7px;
+    box-shadow:0 2px 5px rgba(0,0,0,.18);}
+  .badge-feat{position:absolute; top:9px; right:9px; background:var(--green-bright); color:#fff;
+    font-size:11px; font-weight:bold; padding:4px 9px; border-radius:7px; font-family:'Consolas',monospace;
+    box-shadow:0 2px 5px rgba(0,0,0,.15);}
+  .item .info{padding:11px 13px 13px; display:flex; flex-direction:column; gap:5px; flex:1;}
+  .item .name{font-size:15.5px; font-weight:bold; line-height:1.25;}
   .item .meta{font-size:12px; color:var(--muted); font-family:'Consolas',monospace;}
-  .item .price{margin-top:auto; padding-top:6px; font-size:18px; font-weight:bold; color:var(--gold-dark);}
+  .item .price{margin-top:auto; padding-top:7px; font-size:19px; font-weight:bold; color:var(--green-deep);}
 
   /* ---------- colors ---------- */
-  .chips{display:flex; flex-wrap:wrap; gap:10px;}
-  .chip{display:flex; align-items:center; gap:8px; background:var(--card); border:1px solid var(--line);
-    border-radius:999px; padding:6px 14px 6px 8px; font-size:14px;}
-  .chip .dot{width:20px; height:20px; border-radius:50%; border:1px solid rgba(0,0,0,.15);}
+  .chips{display:flex; flex-wrap:wrap; gap:11px;}
+  .chip{display:flex; align-items:center; gap:9px; background:var(--card); border:1px solid var(--line);
+    border-radius:999px; padding:7px 16px 7px 9px; font-size:14px; box-shadow:var(--shadow);}
+  .chip .dot{width:22px; height:22px; border-radius:50%; border:1px solid rgba(0,0,0,.12); box-shadow:inset 0 0 0 2px #fff;}
 
-  /* ---------- how to order ---------- */
-  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px;}
-  .step{background:var(--card); border:1px solid var(--line); border-left:4px solid var(--gold);
-    border-radius:10px; padding:14px;}
-  .step .n{font-family:'Consolas',monospace; color:var(--gold-dark); font-size:12px; letter-spacing:1px;}
-  .step p{font-size:14px; margin-top:4px;}
+  /* ---------- steps ---------- */
+  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;}
+  .step{background:var(--card); border:1px solid var(--line); border-top:4px solid var(--green);
+    border-radius:12px; padding:16px; box-shadow:var(--shadow);}
+  .step .n{font-family:'Consolas',monospace; color:var(--green); font-size:12px; letter-spacing:1.5px; font-weight:bold;}
+  .step p{font-size:14.5px; margin-top:6px;}
 
-  /* ---------- quote form ---------- */
-  .panel{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px;}
-  .panel label{display:block; font-size:13px; font-family:'Consolas',monospace; color:var(--muted); margin:12px 0 4px;}
-  .panel input, .panel textarea{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px;
-    font-family:Georgia,serif; font-size:15px; background:var(--paper);}
-  .panel textarea{min-height:70px; resize:vertical;}
-  .btnrow{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;}
-  .btn{border:none; border-radius:8px; padding:11px 18px; font-size:14px; cursor:pointer;
-    font-family:'Consolas',monospace; font-weight:bold;}
-  .btn.gold{background:var(--gold); color:var(--navy);}
-  .btn.navy{background:var(--navy); color:var(--paper);}
+  /* ---------- panels / quote ---------- */
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; box-shadow:var(--shadow);}
+  .panel label{display:block; font-size:13px; font-family:'Consolas',monospace; color:var(--muted); margin:14px 0 5px;}
+  .panel input, .panel textarea{width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:9px;
+    font-family:Georgia,serif; font-size:15px; background:var(--paper); transition:border .15s;}
+  .panel input:focus, .panel textarea:focus{outline:none; border-color:var(--green); background:#fff;}
+  .panel textarea{min-height:72px; resize:vertical;}
+  .btnrow{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;}
+  .btn{border:none; border-radius:9px; padding:12px 20px; font-size:14px; cursor:pointer;
+    font-family:'Consolas',monospace; font-weight:bold; transition:.12s;}
+  .btn.green{background:var(--green); color:#fff;}
+  .btn.green:hover{background:var(--green-bright);}
+  .btn.outline{background:#fff; color:var(--green-deep); border:1.5px solid var(--green);}
   .btn:active{transform:translateY(1px);}
-  .note{font-size:13px; color:var(--muted); margin-top:10px;}
-  .pricing-box{background:#f2ecdd; border:1px dashed var(--gold-dark); border-radius:10px; padding:12px 14px;
-    font-size:14px; margin-bottom:14px;}
+  .note{font-size:13px; color:var(--muted); margin-top:12px;}
+  .pricing-box{background:var(--green-tint); border:1px solid #c7ddc9; border-left:4px solid var(--green);
+    border-radius:11px; padding:14px 16px; font-size:14.5px; margin-bottom:16px; line-height:1.55;}
 
   /* ---------- rules ---------- */
-  .rules li{background:var(--card); border:1px solid var(--line); border-left:4px solid #c0392b;
-    border-radius:8px; padding:10px 14px; margin-bottom:8px; list-style:none; font-size:14px;}
+  .rules{list-style:none;}
+  .rules li{background:var(--card); border:1px solid var(--line); border-left:4px solid var(--danger);
+    border-radius:9px; padding:11px 15px; margin-bottom:9px; font-size:14.5px; box-shadow:var(--shadow);
+    display:flex; gap:10px; align-items:flex-start;}
+  .rules li::before{content:"\2715"; color:var(--danger); font-weight:bold; flex:0 0 auto;}
 
-  footer{text-align:center; padding:26px 16px 40px; color:var(--muted); font-size:13px;
-    border-top:1px solid var(--line); margin-top:40px;}
-  .toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--navy);
-    color:var(--paper); padding:10px 20px; border-radius:999px; font-size:14px; opacity:0; transition:opacity .3s;
-    pointer-events:none; z-index:50;}
+  footer{text-align:center; padding:30px 16px; color:#cfe3d3; font-size:13px; background:var(--green-deep);
+    margin-top:48px; font-family:'Consolas',monospace; letter-spacing:.5px;}
+
+  .toast{position:fixed; bottom:22px; left:50%; transform:translateX(-50%); background:var(--green-deep);
+    color:#fff; padding:11px 22px; border-radius:999px; font-size:14px; opacity:0; transition:opacity .3s;
+    pointer-events:none; z-index:50; box-shadow:0 6px 20px rgba(0,0,0,.25);}
   .toast.show{opacity:1;}
 </style>
 </head>
@@ -107,9 +133,10 @@
 <header>
   <div class="knight">&#9822;</div>
   <h1 id="shopName">Chess Club Shop</h1>
-  <p id="shopTag">3D prints, made at school</p>
-  <div class="price-strip"><span>$2</span><span>$3</span><span>$4</span><span>$5</span><span>+ custom quotes</span></div>
+  <p class="tag" id="shopTag">3D prints, made at school</p>
+  <div class="price-strip"><span>$2</span><span>$3</span><span>$4</span><span>$5</span><span class="plus">+ custom</span></div>
 </header>
+<div class="stripe"></div>
 
 <nav>
   <a href="#featured">&#9733; Featured</a>
@@ -128,7 +155,7 @@
 
   <section id="catalog">
     <div class="h2wrap"><span class="eyebrow">everything we print</span><h2>Catalog</h2>
-      <p class="sub">Tell me the <b>item #</b> (like <span class="mono">2-A</span>) and your color(s). That's the whole order.</p>
+      <p class="sub">Tell me the <span class="mono">item&nbsp;#</span> (like <span class="mono">2-A</span>) and your color(s). That's the whole order.</p>
     </div>
     <div id="tiers"></div>
   </section>
@@ -164,8 +191,8 @@
       <label for="qNotes">Notes (colors, size, anything else)</label>
       <textarea id="qNotes"></textarea>
       <div class="btnrow">
-        <button class="btn gold" onclick="emailQuote()">&#9993; Email the request</button>
-        <button class="btn navy" onclick="copyQuote()">Copy request text</button>
+        <button class="btn green" onclick="emailQuote()">&#9993; Email the request</button>
+        <button class="btn outline" onclick="copyQuote()">Copy request text</button>
       </div>
       <p class="note">No email on your phone? Hit <b>Copy</b> and paste it to me any way you can — or just show me the link in person.</p>
     </div>
@@ -177,9 +204,7 @@
   </section>
 </main>
 
-<footer>
-  <span class="mono">&#9822; Chess Club Shop</span> · prints support the chess club
-</footer>
+<footer><span id="footName">&#9822; Chess Club Shop</span> &middot; every print supports the chess club</footer>
 
 <div class="toast" id="toast"></div>
 
@@ -190,11 +215,16 @@
   $("#shopName").textContent = SHOP.name;
   $("#shopTag").textContent = SHOP.tagline;
   $("#findMe").textContent = SHOP.findMe + ".";
+  $("#footName").innerHTML = "&#9822; " + SHOP.name;
+
+  // rotate chess glyphs so image-less cards still look designed
+  const GLYPHS = ["♟","♞","♝","♜","♛","♚"];
+  const glyphFor = code => { let s=0; for(const c of code) s += c.charCodeAt(0); return GLYPHS[s % GLYPHS.length]; };
 
   function itemCard(it){
     const pic = it.image
       ? `<img src="${it.image}" alt="${it.name}">`
-      : `<span class="ph">&#9822;</span>`;
+      : `<span class="ph">${glyphFor(it.code)}</span><span class="ph-lbl">photo soon</span>`;
     const feat = it.featured ? `<span class="badge-feat">&#9733; HOT</span>` : "";
     const colors = it.colorSlots === 2 ? "2-color print" : "1-color print";
     return `<div class="item">
@@ -207,32 +237,26 @@
     </div>`;
   }
 
-  // featured
   $("#featuredGrid").innerHTML = ITEMS.filter(i => i.featured).map(itemCard).join("")
     || `<p class="sub">Nothing featured yet — check the catalog below.</p>`;
 
-  // tiers
   const tiers = [...new Set(ITEMS.map(i => i.tier))].sort((a,b)=>a-b);
   $("#tiers").innerHTML = tiers.map(t => `
-    <div class="h2wrap" style="margin-top:22px"><span class="eyebrow">$${t} tier</span></div>
+    <div class="h2wrap" style="margin-top:26px"><span class="eyebrow">$${t} tier</span></div>
     <div class="grid">${ITEMS.filter(i=>i.tier===t).map(itemCard).join("")}</div>
   `).join("");
 
-  // colors
   $("#colorChips").innerHTML = COLORS.filter(c=>c.inStock).map(c =>
     `<span class="chip"><span class="dot" style="background:${c.hex}"></span>${c.name}</span>`).join("");
 
-  // custom pricing box
   const P = CUSTOM_PRICING;
   $("#customPricing").innerHTML =
     `<b>How custom quotes work:</b> $${P.perHour} per print-hour (rounded up) + $${P.setup} setup, ` +
     `minimum $${P.minimum}. Big jobs over ${P.longJobHours} hours run $${P.longJobPerHour}/hour ` +
     `since they tie up the printer overnight. I'll tell you the exact price before anything prints.`;
 
-  // rules
   $("#rulesList").innerHTML = RULES.map(r => `<li>${r}</li>`).join("");
 
-  // quote request
   function quoteText(){
     return `CUSTOM PRINT REQUEST — ${SHOP.name}
 Name: ${$("#qName").value || "(blank)"}
@@ -252,11 +276,10 @@ Notes: ${$("#qNotes").value || "(none)"}`;
     setTimeout(()=>t.classList.remove("show"), 2500);
   }
 
-  // active nav highlight
   const links = document.querySelectorAll("nav a");
   addEventListener("scroll", () => {
     let cur = "";
-    document.querySelectorAll("section").forEach(s => { if (scrollY >= s.offsetTop - 80) cur = s.id; });
+    document.querySelectorAll("section").forEach(s => { if (scrollY >= s.offsetTop - 90) cur = s.id; });
     links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + cur));
   }, {passive:true});
 </script>
