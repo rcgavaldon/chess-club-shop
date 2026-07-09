@@ -53,11 +53,11 @@
   .ffoot{background:var(--deep); color:#cfe3d3; text-align:center; font-size:9.5pt; padding:.14in;
     font-family:'Consolas',monospace; letter-spacing:.5px;}
 
-  /* ===== ORDER-CARD SHEETS ===== */
+  /* ===== ORDER-CARD SHEETS (8-up, 2 x 4) ===== */
   .sheet{width:7in; margin:14px auto; background:#fff; display:grid; grid-template-columns:3.5in 3.5in;
     box-shadow:0 2px 10px rgba(0,0,0,.15); break-after:page;}
-  .card{width:3.5in; height:2in; border:1px dashed var(--line); padding:.14in .16in;
-    display:flex; gap:.12in; overflow:hidden; break-inside:avoid;}
+  .card{width:3.5in; height:2.4in; border:1px dashed var(--line); padding:.16in .18in;
+    display:flex; gap:.14in; overflow:hidden; break-inside:avoid;}
   .fields{flex:1; display:flex; flex-direction:column; font-size:9.5pt;}
   .brand{font-family:'Consolas',monospace; font-size:7.5pt; letter-spacing:1px; color:var(--green);
     text-transform:uppercase; margin-bottom:.05in; font-weight:bold;}
@@ -82,11 +82,11 @@
 
 <div class="toolbar">
   <h1>&#9822; Print Pack — flyer + order cards</h1>
-  <label>Card sheets: <input type="number" id="nSheets" value="2" min="0" max="10"></label>
+  <label>Card sheets (8 cards each): <input type="number" id="nSheets" value="2" min="0" max="10"></label>
   <button class="ghost" onclick="build()">&#8635; New card IDs</button>
   <button onclick="window.print()">&#128424; Print / Save as PDF</button>
 </div>
-<p class="hint">One document: <b>page&nbsp;1 is the flyer</b>, then each following page is a sheet of 10 order cards with fresh QR ticket numbers.
+<p class="hint">One document: <b>page&nbsp;1 is the flyer</b>, then each following page is a sheet of 8 order cards with fresh QR ticket numbers.
 Hit <b>Print / Save as PDF</b> and choose "Save as PDF" for a single file with everything. Set card sheets to 0 to print just the flyer.</p>
 <p class="warn" id="warn">&#9888; QR library didn't load — pages still print; ticket #s are typed on each card and the flyer URL is written out.</p>
 
@@ -137,13 +137,18 @@ Hit <b>Print / Save as PDF</b> and choose "Save as PDF" for a single file with e
       <div class="tid">${id}</div></div></div>`;
   }
 
+  // allow ?sheets=N&noflyer for automated PDF export
+  const _p = new URLSearchParams(location.search);
+  if(_p.has("sheets")) document.getElementById("nSheets").value = _p.get("sheets");
+  const _noFlyer = _p.get("flyer") === "0";
+
   function build(){
     if(!hasQR) document.getElementById("warn").style.display="block";
     const n = Math.min(10, Math.max(0, parseInt(document.getElementById("nSheets").value) || 0));
     const cardIds = new Set();
-    let html = flyerHtml();
+    let html = _noFlyer ? "" : flyerHtml();
     for(let s=0; s<n; s++){
-      const ids=[]; while(ids.length<10){ const id=newId(); if(!cardIds.has(id)){cardIds.add(id); ids.push(id);} }
+      const ids=[]; while(ids.length<8){ const id=newId(); if(!cardIds.has(id)){cardIds.add(id); ids.push(id);} }
       html += `<div class="sheet">${ids.map(cardHtml).join("")}</div>`;
     }
     document.getElementById("pack").innerHTML = html;
