@@ -56,8 +56,10 @@ const ITEMS = [
   { code: "4-A", name: "Gear Gyro Spinner",    desc: "Planetary-gear gyro fidget spinner.",               tier: 4, minutes: 60, colorSlots: 1, image: "img/4-a.jpg", featured: false, link: "" },
   { code: "4-B", name: "Thor's Hammer Spinner", desc: "Mjölnir fidget spinner and clicker in one.",        tier: 4, minutes: 80, colorSlots: 2, image: "img/4-b.jpg", featured: true,  link: "" },
   // ---- $5 ----
-  { code: "5-A", name: "Pokéball",             desc: "Classic openable Pokéball.",                        tier: 5, minutes: 110, colorSlots: 2, image: "img/5-a.jpg", featured: true,  link: "https://makerworld.com/en/models/839922-pokeball" },
-  { code: "5-B", name: "Pokéball Clicker",     desc: "Pokéball with a satisfying click mechanism.",       tier: 5, minutes: 120, colorSlots: 2, image: "img/5-b.jpg", featured: false, link: "https://makerworld.com/en/models/2665966-pokeball-clicker" },
+  { code: "5-A", name: "Pokéball",             desc: "Classic openable Pokéball — pick your kind.",       tier: 5, minutes: 110, colorSlots: 2, image: "img/5-a.jpg", featured: true,  link: "https://makerworld.com/en/models/839922-pokeball",
+    variants: ["Poké Ball (red / white)", "Great Ball (blue / red)", "Ultra Ball (gold / black)", "Premier Ball (white / red)", "Master Ball (purple / pink)"] },
+  { code: "5-B", name: "Pokéball Clicker",     desc: "Pokéball with a satisfying click — pick your kind.", tier: 5, minutes: 120, colorSlots: 2, image: "img/5-b.jpg", featured: false, link: "https://makerworld.com/en/models/2665966-pokeball-clicker",
+    variants: ["Poké Ball (red / white)", "Great Ball (blue / red)", "Ultra Ball (gold / black)", "Premier Ball (white / red)"] },
 ];
 
 // ---- Custom quote pricing (shown on the site) ----
