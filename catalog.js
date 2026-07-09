@@ -41,23 +41,23 @@ const COLORS = [
 // ETA math is accurate. `desc` shows under each item name on the catalog.
 const ITEMS = [
   // ---- $2 ----
-  { code: "2-A", name: "Joy Fidget",           desc: "Push-button fidget that pops in your hand.",        tier: 2, minutes: 30, colorSlots: 1, image: "", featured: true,  link: "" },
-  { code: "2-B", name: "Spiral Twist Fidget",  desc: "Compact twisting fidget with a satisfying texture.", tier: 2, minutes: 60, colorSlots: 1, image: "", featured: false, link: "" },
-  { code: "2-C", name: "Pocket Puzzle 3×3",    desc: "Mini sliding puzzle that fits in your pocket.",      tier: 2, minutes: 40, colorSlots: 1, image: "", featured: false, link: "" },
+  { code: "2-A", name: "Joy Fidget",           desc: "Push-button fidget that pops in your hand.",        tier: 2, minutes: 30, colorSlots: 1, image: "img/2-a.jpg", featured: true,  link: "" },
+  { code: "2-B", name: "Spiral Twist Fidget",  desc: "Compact twisting fidget with a satisfying texture.", tier: 2, minutes: 60, colorSlots: 1, image: "img/2-b.jpg", featured: false, link: "" },
+  { code: "2-C", name: "Pocket Puzzle 3×3",    desc: "Mini sliding puzzle that fits in your pocket.",      tier: 2, minutes: 40, colorSlots: 1, image: "img/2-c.jpg", featured: false, link: "" },
   // ---- $3 ----
-  { code: "3-A", name: "Casino Chip Fidget",   desc: "Spinning casino-chip fidget — extremely satisfying.", tier: 3, minutes: 45, colorSlots: 2, image: "", featured: false, link: "" },
-  { code: "3-B", name: "Bubble Popper",        desc: "Print-in-place popper — press every bubble, reusable forever.", tier: 3, minutes: 50, colorSlots: 1, image: "", featured: true,  link: "" },
-  { code: "3-C", name: "World Cup Keychain",   desc: "2026 Trionda World Cup ball keychain.",              tier: 3, minutes: 35, colorSlots: 2, image: "", featured: false, link: "" },
-  { code: "3-D", name: "Pocket Puzzle 4×4",    desc: "A tougher 4×4 sliding puzzle challenge.",            tier: 3, minutes: 55, colorSlots: 1, image: "", featured: false, link: "" },
-  { code: "3-E", name: "Keyboard Fidgets",     desc: "Clicky mini keyboard keys to press and fidget with.", tier: 3, minutes: 45, colorSlots: 2, image: "", featured: false, link: "" },
-  { code: "3-F", name: "Mini Christmas Tree",  desc: "Little desktop Christmas tree.",                     tier: 3, minutes: 50, colorSlots: 2, image: "", featured: false, link: "" },
-  { code: "3-G", name: "Smiley Daisy Clicker", desc: "Smiley daisy clicker keychain that pops as you press.", tier: 3, minutes: 40, colorSlots: 2, image: "", featured: false, link: "" },
+  { code: "3-A", name: "Casino Chip Fidget",   desc: "Spinning casino-chip fidget — extremely satisfying.", tier: 3, minutes: 45, colorSlots: 2, image: "img/3-a.jpg", featured: false, link: "" },
+  { code: "3-B", name: "Bubble Popper",        desc: "Print-in-place popper — press every bubble, reusable forever.", tier: 3, minutes: 50, colorSlots: 1, image: "img/3-b.jpg", featured: true,  link: "" },
+  { code: "3-C", name: "World Cup Keychain",   desc: "2026 Trionda World Cup ball keychain.",              tier: 3, minutes: 35, colorSlots: 2, image: "img/3-c.jpg", featured: false, link: "" },
+  { code: "3-D", name: "Pocket Puzzle 4×4",    desc: "A tougher 4×4 sliding puzzle challenge.",            tier: 3, minutes: 55, colorSlots: 1, image: "img/3-d.jpg", featured: false, link: "" },
+  { code: "3-E", name: "Keyboard Fidgets",     desc: "Clicky mini keyboard keys to press and fidget with.", tier: 3, minutes: 45, colorSlots: 2, image: "img/3-e.jpg", featured: false, link: "" },
+  { code: "3-F", name: "Mini Christmas Tree",  desc: "Little desktop Christmas tree.",                     tier: 3, minutes: 50, colorSlots: 2, image: "img/3-f.jpg", featured: false, link: "" },
+  { code: "3-G", name: "Smiley Daisy Clicker", desc: "Smiley daisy clicker keychain that pops as you press.", tier: 3, minutes: 40, colorSlots: 2, image: "img/3-g.jpg", featured: false, link: "" },
   // ---- $4 ----
-  { code: "4-A", name: "Gear Gyro Spinner",    desc: "Planetary-gear gyro fidget spinner.",               tier: 4, minutes: 60, colorSlots: 1, image: "", featured: false, link: "" },
-  { code: "4-B", name: "Thor's Hammer Spinner", desc: "Mjölnir fidget spinner and clicker in one.",        tier: 4, minutes: 80, colorSlots: 2, image: "", featured: true,  link: "" },
+  { code: "4-A", name: "Gear Gyro Spinner",    desc: "Planetary-gear gyro fidget spinner.",               tier: 4, minutes: 60, colorSlots: 1, image: "img/4-a.jpg", featured: false, link: "" },
+  { code: "4-B", name: "Thor's Hammer Spinner", desc: "Mjölnir fidget spinner and clicker in one.",        tier: 4, minutes: 80, colorSlots: 2, image: "img/4-b.jpg", featured: true,  link: "" },
   // ---- $5 ----
-  { code: "5-A", name: "Pokéball",             desc: "Classic openable Pokéball.",                        tier: 5, minutes: 110, colorSlots: 2, image: "", featured: true,  link: "https://makerworld.com/en/models/839922-pokeball" },
-  { code: "5-B", name: "Pokéball Clicker",     desc: "Pokéball with a satisfying click mechanism.",       tier: 5, minutes: 120, colorSlots: 2, image: "", featured: false, link: "https://makerworld.com/en/models/2665966-pokeball-clicker" },
+  { code: "5-A", name: "Pokéball",             desc: "Classic openable Pokéball.",                        tier: 5, minutes: 110, colorSlots: 2, image: "img/5-a.jpg", featured: true,  link: "https://makerworld.com/en/models/839922-pokeball" },
+  { code: "5-B", name: "Pokéball Clicker",     desc: "Pokéball with a satisfying click mechanism.",       tier: 5, minutes: 120, colorSlots: 2, image: "img/5-b.jpg", featured: false, link: "https://makerworld.com/en/models/2665966-pokeball-clicker" },
 ];
 
 // ---- Custom quote pricing (shown on the site) ----
