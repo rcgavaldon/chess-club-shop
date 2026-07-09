@@ -191,10 +191,10 @@
       <label for="qNotes">Notes (colors, size, anything else)</label>
       <textarea id="qNotes"></textarea>
       <div class="btnrow">
-        <button class="btn green" onclick="emailQuote()">&#9993; Email the request</button>
+        <button class="btn green" onclick="sendQuote()">&#10148; Send request</button>
         <button class="btn outline" onclick="copyQuote()">Copy request text</button>
       </div>
-      <p class="note">No email on your phone? Hit <b>Copy</b> and paste it to me any way you can — or just show me the link in person.</p>
+      <p class="note" id="quoteNote">I'll review it and tell you a price. No email needed — just tap Send. You can also show me the link in person.</p>
     </div>
   </section>
 
@@ -209,6 +209,7 @@
 <div class="toast" id="toast"></div>
 
 <script src="catalog.js"></script>
+<script src="store.js"></script>
 <script>
   const $ = s => document.querySelector(s);
   document.title = SHOP.name + " — 3D Prints";
@@ -266,6 +267,24 @@ Notes: ${$("#qNotes").value || "(none)"}`;
   }
   function emailQuote(){
     location.href = `mailto:${SHOP.contactEmail}?subject=${encodeURIComponent("Custom print request")}&body=${encodeURIComponent(quoteText())}`;
+  }
+  async function sendQuote(){
+    const name = $("#qName").value.trim(), link = $("#qLink").value.trim();
+    if(!name || !link) return toast("Add your name and the link first");
+    // Try the queue backend first; fall back to email if it's not set up / offline.
+    let sent = false;
+    try {
+      sent = await Store.requestQuote({
+        name, period:$("#qPeriod").value.trim(),
+        itemLabel:"CUSTOM", notes:"Link: "+link+" | "+($("#qNotes").value.trim()||"(no notes)"),
+      });
+    } catch { sent = false; }
+    if(sent){
+      toast("Sent! I'll get you a price soon &#10003;");
+      ["qName","qPeriod","qLink","qNotes"].forEach(id=>$("#"+id).value="");
+    } else {
+      emailQuote();  // no backend or offline → open their email pre-filled
+    }
   }
   function copyQuote(){
     navigator.clipboard.writeText(quoteText()).then(()=>toast("Copied — paste it to Mr. Gavaldon"))

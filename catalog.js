@@ -12,6 +12,12 @@ const SHOP = {
   findMe: "Find Mr. Gavaldon (Chess Club) to place your order",
 };
 
+// ---- Backend (Google Sheet) ----
+// Paste the Apps Script Web App URL here after you deploy it (see apps-script/DEPLOY.md).
+// Leave "" and everything still works, but orders only live on this one device.
+// When set: orders sync to your Sheet and you can manage the queue from any device.
+const BACKEND_URL = "";
+
 // ---- Colors you actually stock (kids pick from these) ----
 // inStock: false hides the chip from the picker but keeps it here.
 const COLORS = [
