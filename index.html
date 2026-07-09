@@ -74,8 +74,9 @@
   nav a:hover{color:var(--gold-bright);}
   nav a.active{border-bottom-color:var(--gold); color:var(--gold-bright); font-weight:700;}
 
-  main{max-width:1020px; margin:0 auto; padding:34px 16px 44px;}
-  section{margin-top:52px; scroll-margin-top:60px;}
+  main{max-width:1160px; margin:0 auto; padding:30px 14px 44px;}
+  section{margin-top:44px; scroll-margin-top:60px;}
+  @media (min-width:760px){ main{padding:34px 22px 48px;} section{margin-top:52px;} }
   .h2wrap{margin-bottom:20px;}
   .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:2.5px; color:var(--gold);
     text-transform:uppercase; display:flex; align-items:center; gap:7px; margin-bottom:5px;}
@@ -85,7 +86,11 @@
   .sub .mono{color:var(--gold-bright); background:rgba(204,168,79,.12); padding:1px 6px; border-radius:5px; font-size:13px;}
 
   /* ================= ITEM CARDS ================= */
-  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(178px,1fr)); gap:20px;}
+  /* responsive product grid: 2-up on phones → 5-up on desktop */
+  .grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px;}
+  @media (min-width:520px){ .grid{grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px;} }
+  @media (min-width:780px){ .grid{grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px;} }
+  @media (min-width:1040px){ .grid{grid-template-columns:repeat(5,minmax(0,1fr)); gap:20px;} }
   .item{background:var(--card); border:1px solid var(--card-line); border-radius:16px; overflow:hidden;
     display:flex; flex-direction:column; box-shadow:var(--shadow); cursor:pointer; color:var(--ink);
     transition:transform .18s cubic-bezier(.2,.7,.3,1), box-shadow .18s;}
