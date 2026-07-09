@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chess Club Shop — 3D Prints</title>
+<style>
+  :root{
+    --ink:#1d2233; --paper:#f6f3ea; --card:#ffffff; --navy:#242b47;
+    --gold:#d9a441; --gold-dark:#b8862e; --line:#e4ddcc; --muted:#6b7080;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:Georgia,'Times New Roman',serif; background:var(--paper); color:var(--ink); line-height:1.5;}
+  .mono{font-family:'Consolas','Courier New',monospace;}
+
+  /* ---------- header ---------- */
+  header{
+    background:var(--navy); color:var(--paper); padding:34px 18px 30px; text-align:center;
+    background-image:
+      linear-gradient(rgba(36,43,71,.94), rgba(36,43,71,.94)),
+      repeating-conic-gradient(#fff 0% 25%, transparent 0% 50%);
+    background-size:auto, 44px 44px;
+  }
+  header .knight{font-size:44px; line-height:1; color:var(--gold);}
+  header h1{font-size:clamp(28px,6vw,40px); letter-spacing:.5px; margin-top:6px;}
+  header p{color:#cfd4e6; font-size:15px; margin-top:6px;}
+  .price-strip{margin-top:14px; display:inline-flex; gap:8px; flex-wrap:wrap; justify-content:center;}
+  .price-strip span{background:rgba(217,164,65,.15); border:1px solid var(--gold); color:var(--gold);
+    border-radius:999px; padding:3px 12px; font-size:13px;}
+
+  /* ---------- nav ---------- */
+  nav{position:sticky; top:0; z-index:10; background:var(--card); border-bottom:2px solid var(--navy);
+    display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  nav a{flex:0 0 auto; padding:12px 16px; text-decoration:none; color:var(--ink);
+    font-family:'Consolas',monospace; font-size:13px; white-space:nowrap; border-bottom:3px solid transparent;}
+  nav a:hover, nav a.active{border-bottom-color:var(--gold); color:var(--gold-dark);}
+
+  main{max-width:960px; margin:0 auto; padding:22px 16px 60px;}
+  section{margin-top:36px; scroll-margin-top:60px;}
+  h2{font-size:24px; display:flex; align-items:center; gap:10px;}
+  h2 .eyebrow{font-family:'Consolas',monospace; font-size:11px; letter-spacing:2px; color:var(--gold-dark);
+    text-transform:uppercase; display:block;}
+  .h2wrap{margin-bottom:14px;}
+  .sub{color:var(--muted); font-size:14px; margin-top:4px;}
+
+  /* ---------- item cards ---------- */
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px;}
+  .item{background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(29,34,51,.06);}
+  .item .pic{aspect-ratio:1/1; background:
+      repeating-conic-gradient(#eceadf 0% 25%, #f8f6ee 0% 50%);
+    background-size:36px 36px; display:flex; align-items:center; justify-content:center; position:relative;}
+  .item .pic img{width:100%; height:100%; object-fit:cover;}
+  .item .pic .ph{color:#b9b29c; font-size:34px;}
+  .badge-code{position:absolute; top:8px; left:8px; background:var(--navy); color:var(--gold);
+    font-family:'Consolas',monospace; font-size:13px; font-weight:bold; padding:3px 9px; border-radius:6px;}
+  .badge-feat{position:absolute; top:8px; right:8px; background:var(--gold); color:var(--navy);
+    font-size:11px; font-weight:bold; padding:3px 8px; border-radius:6px; font-family:'Consolas',monospace;}
+  .item .info{padding:10px 12px 12px; display:flex; flex-direction:column; gap:4px; flex:1;}
+  .item .name{font-size:15px; font-weight:bold;}
+  .item .meta{font-size:12px; color:var(--muted); font-family:'Consolas',monospace;}
+  .item .price{margin-top:auto; padding-top:6px; font-size:18px; font-weight:bold; color:var(--gold-dark);}
+
+  /* ---------- colors ---------- */
+  .chips{display:flex; flex-wrap:wrap; gap:10px;}
+  .chip{display:flex; align-items:center; gap:8px; background:var(--card); border:1px solid var(--line);
+    border-radius:999px; padding:6px 14px 6px 8px; font-size:14px;}
+  .chip .dot{width:20px; height:20px; border-radius:50%; border:1px solid rgba(0,0,0,.15);}
+
+  /* ---------- how to order ---------- */
+  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px;}
+  .step{background:var(--card); border:1px solid var(--line); border-left:4px solid var(--gold);
+    border-radius:10px; padding:14px;}
+  .step .n{font-family:'Consolas',monospace; color:var(--gold-dark); font-size:12px; letter-spacing:1px;}
+  .step p{font-size:14px; margin-top:4px;}
+
+  /* ---------- quote form ---------- */
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px;}
+  .panel label{display:block; font-size:13px; font-family:'Consolas',monospace; color:var(--muted); margin:12px 0 4px;}
+  .panel input, .panel textarea{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px;
+    font-family:Georgia,serif; font-size:15px; background:var(--paper);}
+  .panel textarea{min-height:70px; resize:vertical;}
+  .btnrow{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;}
+  .btn{border:none; border-radius:8px; padding:11px 18px; font-size:14px; cursor:pointer;
+    font-family:'Consolas',monospace; font-weight:bold;}
+  .btn.gold{background:var(--gold); color:var(--navy);}
+  .btn.navy{background:var(--navy); color:var(--paper);}
+  .btn:active{transform:translateY(1px);}
+  .note{font-size:13px; color:var(--muted); margin-top:10px;}
+  .pricing-box{background:#f2ecdd; border:1px dashed var(--gold-dark); border-radius:10px; padding:12px 14px;
+    font-size:14px; margin-bottom:14px;}
+
+  /* ---------- rules ---------- */
+  .rules li{background:var(--card); border:1px solid var(--line); border-left:4px solid #c0392b;
+    border-radius:8px; padding:10px 14px; margin-bottom:8px; list-style:none; font-size:14px;}
+
+  footer{text-align:center; padding:26px 16px 40px; color:var(--muted); font-size:13px;
+    border-top:1px solid var(--line); margin-top:40px;}
+  .toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--navy);
+    color:var(--paper); padding:10px 20px; border-radius:999px; font-size:14px; opacity:0; transition:opacity .3s;
+    pointer-events:none; z-index:50;}
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="knight">&#9822;</div>
+  <h1 id="shopName">Chess Club Shop</h1>
+  <p id="shopTag">3D prints, made at school</p>
+  <div class="price-strip"><span>$2</span><span>$3</span><span>$4</span><span>$5</span><span>+ custom quotes</span></div>
+</header>
+
+<nav>
+  <a href="#featured">&#9733; Featured</a>
+  <a href="#catalog">Catalog</a>
+  <a href="#colors">Colors</a>
+  <a href="#order">How to Order</a>
+  <a href="#custom">Custom Requests</a>
+  <a href="#rules">Rules</a>
+</nav>
+
+<main>
+  <section id="featured">
+    <div class="h2wrap"><span class="eyebrow">most popular</span><h2>&#9733; Featured</h2></div>
+    <div class="grid" id="featuredGrid"></div>
+  </section>
+
+  <section id="catalog">
+    <div class="h2wrap"><span class="eyebrow">everything we print</span><h2>Catalog</h2>
+      <p class="sub">Tell me the <b>item #</b> (like <span class="mono">2-A</span>) and your color(s). That's the whole order.</p>
+    </div>
+    <div id="tiers"></div>
+  </section>
+
+  <section id="colors">
+    <div class="h2wrap"><span class="eyebrow">in stock right now</span><h2>Available Colors</h2>
+      <p class="sub">Every print comes in your choice of these. 2-color items: pick two.</p>
+    </div>
+    <div class="chips" id="colorChips"></div>
+  </section>
+
+  <section id="order">
+    <div class="h2wrap"><span class="eyebrow">three steps</span><h2>How to Order</h2></div>
+    <div class="steps">
+      <div class="step"><div class="n">STEP 1</div><p>Pick an item and note its <b>item #</b> and the color(s) you want.</p></div>
+      <div class="step"><div class="n">STEP 2</div><p id="findMe">Find Mr. Gavaldon (Chess Club) to place your order.</p></div>
+      <div class="step"><div class="n">STEP 3</div><p>You get an order card with your ticket number. Pay cash when you pick up your print.</p></div>
+    </div>
+  </section>
+
+  <section id="custom">
+    <div class="h2wrap"><span class="eyebrow">see something cool online?</span><h2>Custom Requests</h2>
+      <p class="sub">Found a print you like on <a href="https://makerworld.com" target="_blank" rel="noopener">MakerWorld</a> (the Bambu Handy app)? Send the link and I'll quote it.</p>
+    </div>
+    <div class="pricing-box" id="customPricing"></div>
+    <div class="panel">
+      <label for="qName">Your name</label>
+      <input id="qName" placeholder="First name + last initial">
+      <label for="qPeriod">1st period class</label>
+      <input id="qPeriod" placeholder="Teacher / room for 1st period">
+      <label for="qLink">Link to the print</label>
+      <input id="qLink" placeholder="https://makerworld.com/...">
+      <label for="qNotes">Notes (colors, size, anything else)</label>
+      <textarea id="qNotes"></textarea>
+      <div class="btnrow">
+        <button class="btn gold" onclick="emailQuote()">&#9993; Email the request</button>
+        <button class="btn navy" onclick="copyQuote()">Copy request text</button>
+      </div>
+      <p class="note">No email on your phone? Hit <b>Copy</b> and paste it to me any way you can — or just show me the link in person.</p>
+    </div>
+  </section>
+
+  <section id="rules">
+    <div class="h2wrap"><span class="eyebrow">read before requesting</span><h2>What I Won't Print</h2></div>
+    <ul class="rules" id="rulesList"></ul>
+  </section>
+</main>
+
+<footer>
+  <span class="mono">&#9822; Chess Club Shop</span> · prints support the chess club
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="catalog.js"></script>
+<script>
+  const $ = s => document.querySelector(s);
+  document.title = SHOP.name + " — 3D Prints";
+  $("#shopName").textContent = SHOP.name;
+  $("#shopTag").textContent = SHOP.tagline;
+  $("#findMe").textContent = SHOP.findMe + ".";
+
+  function itemCard(it){
+    const pic = it.image
+      ? `<img src="${it.image}" alt="${it.name}">`
+      : `<span class="ph">&#9822;</span>`;
+    const feat = it.featured ? `<span class="badge-feat">&#9733; HOT</span>` : "";
+    const colors = it.colorSlots === 2 ? "2-color print" : "1-color print";
+    return `<div class="item">
+      <div class="pic">${pic}<span class="badge-code">${it.code}</span>${feat}</div>
+      <div class="info">
+        <span class="name">${it.name}</span>
+        <span class="meta">${colors}</span>
+        <span class="price">$${it.tier}</span>
+      </div>
+    </div>`;
+  }
+
+  // featured
+  $("#featuredGrid").innerHTML = ITEMS.filter(i => i.featured).map(itemCard).join("")
+    || `<p class="sub">Nothing featured yet — check the catalog below.</p>`;
+
+  // tiers
+  const tiers = [...new Set(ITEMS.map(i => i.tier))].sort((a,b)=>a-b);
+  $("#tiers").innerHTML = tiers.map(t => `
+    <div class="h2wrap" style="margin-top:22px"><span class="eyebrow">$${t} tier</span></div>
+    <div class="grid">${ITEMS.filter(i=>i.tier===t).map(itemCard).join("")}</div>
+  `).join("");
+
+  // colors
+  $("#colorChips").innerHTML = COLORS.filter(c=>c.inStock).map(c =>
+    `<span class="chip"><span class="dot" style="background:${c.hex}"></span>${c.name}</span>`).join("");
+
+  // custom pricing box
+  const P = CUSTOM_PRICING;
+  $("#customPricing").innerHTML =
+    `<b>How custom quotes work:</b> $${P.perHour} per print-hour (rounded up) + $${P.setup} setup, ` +
+    `minimum $${P.minimum}. Big jobs over ${P.longJobHours} hours run $${P.longJobPerHour}/hour ` +
+    `since they tie up the printer overnight. I'll tell you the exact price before anything prints.`;
+
+  // rules
+  $("#rulesList").innerHTML = RULES.map(r => `<li>${r}</li>`).join("");
+
+  // quote request
+  function quoteText(){
+    return `CUSTOM PRINT REQUEST — ${SHOP.name}
+Name: ${$("#qName").value || "(blank)"}
+1st period: ${$("#qPeriod").value || "(blank)"}
+Link: ${$("#qLink").value || "(blank)"}
+Notes: ${$("#qNotes").value || "(none)"}`;
+  }
+  function emailQuote(){
+    location.href = `mailto:${SHOP.contactEmail}?subject=${encodeURIComponent("Custom print request")}&body=${encodeURIComponent(quoteText())}`;
+  }
+  function copyQuote(){
+    navigator.clipboard.writeText(quoteText()).then(()=>toast("Copied — paste it to Mr. Gavaldon"))
+      .catch(()=>toast("Couldn't copy — screenshot this instead"));
+  }
+  function toast(msg){
+    const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"), 2500);
+  }
+
+  // active nav highlight
+  const links = document.querySelectorAll("nav a");
+  addEventListener("scroll", () => {
+    let cur = "";
+    document.querySelectorAll("section").forEach(s => { if (scrollY >= s.offsetTop - 80) cur = s.id; });
+    links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + cur));
+  }, {passive:true});
+</script>
+</body>
+</html>

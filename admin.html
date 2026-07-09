@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop Admin — Production Queue</title>
+<style>
+  :root{
+    --ink:#1d2233; --paper:#f6f3ea; --card:#fff; --navy:#242b47; --gold:#d9a441;
+    --gold-dark:#b8862e; --line:#e4ddcc; --muted:#6b7080;
+    --pending:#c07f13; --printing:#3763c9; --done:#3d9950; --pickedup:#6b7080; --cancelled:#c0392b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:Georgia,serif; background:var(--paper); color:var(--ink); line-height:1.45; padding-bottom:80px;}
+  .mono{font-family:'Consolas','Courier New',monospace;}
+
+  header{background:var(--navy); color:var(--paper); padding:14px 16px; display:flex; align-items:center; gap:10px;
+    position:sticky; top:0; z-index:20;}
+  header .k{color:var(--gold); font-size:22px;}
+  header h1{font-size:17px; flex:1;}
+  header button{background:none; border:1px solid rgba(255,255,255,.3); color:var(--paper); border-radius:8px;
+    padding:6px 10px; font-size:12px; cursor:pointer; font-family:'Consolas',monospace;}
+
+  main{max-width:760px; margin:0 auto; padding:14px;}
+
+  /* stats bar */
+  .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px;}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 12px; text-align:center;}
+  .stat .v{font-size:20px; font-weight:bold; color:var(--gold-dark);}
+  .stat .l{font-size:11px; color:var(--muted); font-family:'Consolas',monospace; letter-spacing:.5px;}
+
+  .btn{border:none; border-radius:8px; padding:11px 16px; font-size:14px; cursor:pointer;
+    font-family:'Consolas',monospace; font-weight:bold;}
+  .btn.gold{background:var(--gold); color:var(--navy);}
+  .btn.navy{background:var(--navy); color:var(--paper);}
+  .btn.ghost{background:none; border:1px solid var(--line); color:var(--muted);}
+  .btn.sm{padding:6px 10px; font-size:12px;}
+  .btn:active{transform:translateY(1px);}
+  .newbar{display:flex; gap:10px; margin-bottom:16px;}
+  .newbar .btn{flex:1;}
+
+  /* tabs */
+  .tabs{display:flex; gap:6px; overflow-x:auto; margin-bottom:12px; -webkit-overflow-scrolling:touch;}
+  .tab{flex:0 0 auto; background:var(--card); border:1px solid var(--line); border-radius:999px;
+    padding:7px 14px; font-size:13px; cursor:pointer; font-family:'Consolas',monospace; white-space:nowrap;}
+  .tab.active{background:var(--navy); color:var(--gold); border-color:var(--navy);}
+  .tab .n{opacity:.7;}
+
+  /* ticket cards */
+  .ticket{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:10px;
+    border-left:5px solid var(--muted);}
+  .ticket[data-s="pending"]{border-left-color:var(--pending);}
+  .ticket[data-s="printing"]{border-left-color:var(--printing);}
+  .ticket[data-s="done"]{border-left-color:var(--done);}
+  .ticket[data-s="pickedup"]{border-left-color:var(--pickedup); opacity:.75;}
+  .ticket[data-s="cancelled"]{border-left-color:var(--cancelled); opacity:.6;}
+  .trow{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
+  .tid{font-family:'Consolas',monospace; font-weight:bold; font-size:13px; background:var(--paper);
+    border:1px solid var(--line); border-radius:6px; padding:2px 7px;}
+  .tname{font-weight:bold; font-size:15px;}
+  .tstatus{margin-left:auto; font-family:'Consolas',monospace; font-size:11px; text-transform:uppercase; letter-spacing:1px;}
+  .tmeta{font-size:13px; color:var(--muted); margin-top:4px;}
+  .tmeta b{color:var(--ink);}
+  .eta{font-size:12px; font-family:'Consolas',monospace; color:var(--gold-dark); margin-top:4px;}
+  .tbtns{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+
+  /* form + settings */
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:16px;}
+  .panel h2{font-size:17px; margin-bottom:4px;}
+  .panel label{display:block; font-size:12px; font-family:'Consolas',monospace; color:var(--muted); margin:12px 0 4px;}
+  .panel input, .panel select, .panel textarea{width:100%; padding:10px 12px; border:1px solid var(--line);
+    border-radius:8px; font-family:Georgia,serif; font-size:15px; background:var(--paper);}
+  .panel textarea{min-height:60px;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .colorpick{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;}
+  .cchip{display:flex; align-items:center; gap:6px; border:1px solid var(--line); border-radius:999px;
+    padding:5px 12px 5px 7px; font-size:13px; cursor:pointer; background:var(--paper); user-select:none;}
+  .cchip .dot{width:16px; height:16px; border-radius:50%; border:1px solid rgba(0,0,0,.15);}
+  .cchip.on{border-color:var(--gold-dark); background:#f5ead2; font-weight:bold;}
+  .hidden{display:none;}
+  .toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--navy); color:var(--paper);
+    padding:10px 20px; border-radius:999px; font-size:14px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:50;}
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="k">&#9822;</span><h1>Shop Admin — Queue</h1>
+  <button onclick="toggleSettings()">&#9881; Settings</button>
+  <button onclick="exportData()">Export</button>
+</header>
+
+<main>
+  <div class="stats">
+    <div class="stat"><div class="v" id="stJobs">0</div><div class="l">IN QUEUE</div></div>
+    <div class="stat"><div class="v" id="stHours">0h</div><div class="l">PRINT TIME</div></div>
+    <div class="stat"><div class="v" id="stClear">—</div><div class="l">QUEUE CLEARS</div></div>
+  </div>
+
+  <div class="newbar">
+    <button class="btn gold" onclick="openForm()">+ New Ticket</button>
+    <button class="btn navy" onclick="location.href='cards.html'">&#9646; Print QR Cards</button>
+  </div>
+
+  <!-- settings -->
+  <div class="panel hidden" id="settings">
+    <h2>&#9881; Capacity settings</h2>
+    <p style="font-size:13px;color:var(--muted)">Drives every ETA. Be honest about real printing time.</p>
+    <div class="row2">
+      <div><label>Print minutes per school night</label><input type="number" id="setWeekday" min="0"></div>
+      <div><label>Print minutes per weekend day</label><input type="number" id="setWeekend" min="0"></div>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:14px;">
+      <button class="btn gold" onclick="saveSettings()">Save</button>
+      <button class="btn ghost" onclick="importData()">Import backup</button>
+    </div>
+  </div>
+
+  <!-- new / edit ticket -->
+  <div class="panel hidden" id="form">
+    <h2 id="formTitle">New Ticket</h2>
+    <label>Ticket # <span id="idHint" style="color:var(--gold-dark)"></span></label>
+    <input id="fId" class="mono" placeholder="auto" style="text-transform:uppercase">
+    <div class="row2">
+      <div><label>Name</label><input id="fName" placeholder="First name + last initial"></div>
+      <div><label>1st period class</label><input id="fPeriod" placeholder="Teacher / room"></div>
+    </div>
+    <label>Item</label>
+    <select id="fItem" onchange="itemChanged()"></select>
+    <div class="row2">
+      <div><label>Price ($)</label><input type="number" id="fPrice" min="0" step="1"></div>
+      <div><label>Print minutes (sliced)</label><input type="number" id="fMinutes" min="1"></div>
+    </div>
+    <label>Colors</label>
+    <div class="colorpick" id="fColors"></div>
+    <label>Link / notes (custom jobs: paste the MakerWorld link)</label>
+    <textarea id="fNotes"></textarea>
+    <div style="display:flex; gap:10px; margin-top:16px;">
+      <button class="btn gold" onclick="saveTicket()">Save Ticket</button>
+      <button class="btn ghost" onclick="closeForm()">Cancel</button>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div id="list"></div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="catalog.js"></script>
+<script>
+  const $ = s => document.querySelector(s);
+  const LS_T = "ccshop_tickets", LS_S = "ccshop_settings";
+  const STATUSES = ["pending","printing","done","pickedup","cancelled"];
+  const NEXT = {pending:"printing", printing:"done", done:"pickedup"};
+  const NEXT_LABEL = {pending:"&#9654; Start Printing", printing:"&#10003; Mark Done", done:"&#128230; Picked Up + Paid"};
+
+  let tickets = JSON.parse(localStorage.getItem(LS_T) || "[]");
+  let settings = Object.assign({weekdayMin:120, weekendMin:300}, JSON.parse(localStorage.getItem(LS_S) || "{}"));
+  let activeTab = "queue";   // queue = pending+printing
+  let editingId = null;
+
+  const save = () => localStorage.setItem(LS_T, JSON.stringify(tickets));
+  const newId = () => {
+    const abc = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+    let id;
+    do { id = Array.from({length:6}, () => abc[Math.floor(Math.random()*abc.length)]).join(""); }
+    while (tickets.some(t => t.id === id));
+    return id;
+  };
+
+  // ---------- ETA engine ----------
+  // Walks forward day by day assigning capacity to queued jobs in order.
+  function computeEtas(){
+    const queue = tickets.filter(t => t.status === "pending" || t.status === "printing")
+      .sort((a,b) => a.createdAt - b.createdAt);
+    const etas = {};
+    let day = new Date(); day.setHours(0,0,0,0);
+    let remainingToday = capacityOf(day);
+    let guard = 0;
+    for (const t of queue){
+      let mins = t.minutes || 60;
+      while (mins > 0 && guard < 3650){
+        if (remainingToday >= mins){ remainingToday -= mins; mins = 0; }
+        else { mins -= remainingToday; day = new Date(day.getTime() + 864e5); remainingToday = capacityOf(day); guard++; }
+      }
+      etas[t.id] = new Date(day);
+    }
+    return {etas, clearDate: queue.length ? new Date(day) : null, queue};
+  }
+  const capacityOf = d => (d.getDay() === 0 || d.getDay() === 6) ? settings.weekendMin : settings.weekdayMin;
+  const fmtDay = d => d.toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
+
+  // ---------- render ----------
+  function render(){
+    const {etas, clearDate, queue} = computeEtas();
+    const totalMin = queue.reduce((s,t) => s + (t.minutes||60), 0);
+    $("#stJobs").textContent = queue.length;
+    $("#stHours").textContent = (totalMin/60).toFixed(1) + "h";
+    $("#stClear").textContent = clearDate ? fmtDay(clearDate) : "—";
+
+    const tabs = [
+      {k:"queue", label:"Queue", n: queue.length},
+      {k:"done", label:"Ready", n: tickets.filter(t=>t.status==="done").length},
+      {k:"pickedup", label:"Delivered", n: tickets.filter(t=>t.status==="pickedup").length},
+      {k:"cancelled", label:"Cancelled", n: tickets.filter(t=>t.status==="cancelled").length},
+      {k:"all", label:"All", n: tickets.length},
+    ];
+    $("#tabs").innerHTML = tabs.map(t =>
+      `<div class="tab ${activeTab===t.k?"active":""}" onclick="setTab('${t.k}')">${t.label} <span class="n">${t.n}</span></div>`).join("");
+
+    let shown = tickets.slice().sort((a,b) => b.createdAt - a.createdAt);
+    if (activeTab === "queue") shown = shown.filter(t => t.status==="pending" || t.status==="printing").sort((a,b)=>a.createdAt-b.createdAt);
+    else if (activeTab !== "all") shown = shown.filter(t => t.status === activeTab);
+
+    $("#list").innerHTML = shown.map(t => {
+      const eta = etas[t.id] ? `<div class="eta">est. ready ${fmtDay(etas[t.id])}</div>` : "";
+      const adv = NEXT[t.status] ? `<button class="btn gold sm" onclick="advance('${t.id}')">${NEXT_LABEL[t.status]}</button>` : "";
+      const cancel = (t.status==="pending"||t.status==="printing") ? `<button class="btn ghost sm" onclick="cancelTicket('${t.id}')">Cancel</button>` : "";
+      return `<div class="ticket" data-s="${t.status}">
+        <div class="trow"><span class="tid">${t.id}</span><span class="tname">${esc(t.name)||"(no name)"}</span>
+          <span class="tstatus" style="color:var(--${t.status})">${t.status}</span></div>
+        <div class="tmeta"><b>${esc(t.itemLabel)}</b> · $${t.price} · ${t.minutes} min · ${t.colors.join(" + ")||"no colors"}${t.period?` · 1st per: ${esc(t.period)}`:""}</div>
+        ${t.notes ? `<div class="tmeta">${esc(t.notes)}</div>` : ""}${eta}
+        <div class="tbtns">${adv}${cancel}<button class="btn ghost sm" onclick="openForm('${t.id}')">Edit</button></div>
+      </div>`;
+    }).join("") || `<p style="text-align:center;color:var(--muted);padding:30px 0">Nothing here.</p>`;
+  }
+  const esc = s => (s||"").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  function setTab(k){ activeTab = k; render(); }
+
+  // ---------- ticket ops ----------
+  function advance(id){
+    const t = tickets.find(t => t.id === id); if (!t || !NEXT[t.status]) return;
+    t.status = NEXT[t.status]; t.updatedAt = Date.now(); save(); render();
+    toast(`${id} → ${t.status}`);
+  }
+  function cancelTicket(id){
+    if (!confirm(`Cancel ticket ${id}?`)) return;
+    const t = tickets.find(t => t.id === id);
+    t.status = "cancelled"; t.updatedAt = Date.now(); save(); render();
+  }
+
+  // ---------- form ----------
+  function buildItemSelect(){
+    $("#fItem").innerHTML = ITEMS.map(i =>
+      `<option value="${i.code}">${i.code} — ${i.name} ($${i.tier})</option>`).join("")
+      + `<option value="CUSTOM">CUSTOM — quote job</option>`;
+  }
+  function itemChanged(){
+    const code = $("#fItem").value;
+    const it = ITEMS.find(i => i.code === code);
+    if (it){ $("#fPrice").value = it.tier; $("#fMinutes").value = it.minutes; }
+  }
+  function buildColorPick(selected){
+    $("#fColors").innerHTML = COLORS.filter(c=>c.inStock || (selected||[]).includes(c.name)).map(c =>
+      `<span class="cchip ${(selected||[]).includes(c.name)?"on":""}" data-c="${c.name}" onclick="this.classList.toggle('on')">
+        <span class="dot" style="background:${c.hex}"></span>${c.name}</span>`).join("");
+  }
+  function openForm(id, presetId){
+    editingId = id || null;
+    const t = id ? tickets.find(t => t.id === id) : null;
+    $("#formTitle").textContent = t ? `Edit Ticket ${t.id}` : "New Ticket";
+    $("#idHint").textContent = presetId ? "(from scanned card)" : "";
+    $("#fId").value = t ? t.id : (presetId || "");
+    $("#fId").disabled = !!t;
+    $("#fName").value = t ? t.name : "";
+    $("#fPeriod").value = t ? t.period : "";
+    buildItemSelect();
+    $("#fItem").value = t ? t.itemCode : ITEMS[0].code;
+    $("#fPrice").value = t ? t.price : ITEMS[0].tier;
+    $("#fMinutes").value = t ? t.minutes : ITEMS[0].minutes;
+    buildColorPick(t ? t.colors : []);
+    $("#fNotes").value = t ? t.notes : "";
+    $("#form").classList.remove("hidden");
+    $("#form").scrollIntoView({behavior:"smooth"});
+    if (!t) $("#fName").focus();
+  }
+  function closeForm(){ $("#form").classList.add("hidden"); editingId = null; history.replaceState(null,"",location.pathname); }
+  function saveTicket(){
+    const idRaw = $("#fId").value.trim().toUpperCase();
+    const code = $("#fItem").value;
+    const it = ITEMS.find(i => i.code === code);
+    const colors = [...document.querySelectorAll("#fColors .cchip.on")].map(e => e.dataset.c);
+    const minutes = parseInt($("#fMinutes").value) || 60;
+    const data = {
+      name: $("#fName").value.trim(),
+      period: $("#fPeriod").value.trim(),
+      itemCode: code,
+      itemLabel: it ? `${it.code} ${it.name}` : "CUSTOM",
+      price: parseFloat($("#fPrice").value) || 0,
+      minutes, colors,
+      notes: $("#fNotes").value.trim(),
+      updatedAt: Date.now(),
+    };
+    if (editingId){
+      Object.assign(tickets.find(t => t.id === editingId), data);
+    } else {
+      const id = idRaw || newId();
+      if (tickets.some(t => t.id === id)) return toast(`Ticket ${id} already exists!`);
+      tickets.push(Object.assign({id, status:"pending", createdAt: Date.now()}, data));
+    }
+    save(); closeForm(); render(); toast("Saved &#10003;");
+  }
+
+  // ---------- settings / backup ----------
+  function toggleSettings(){
+    $("#setWeekday").value = settings.weekdayMin;
+    $("#setWeekend").value = settings.weekendMin;
+    $("#settings").classList.toggle("hidden");
+  }
+  function saveSettings(){
+    settings.weekdayMin = parseInt($("#setWeekday").value) || 0;
+    settings.weekendMin = parseInt($("#setWeekend").value) || 0;
+    localStorage.setItem(LS_S, JSON.stringify(settings));
+    $("#settings").classList.add("hidden"); render(); toast("Settings saved");
+  }
+  function exportData(){
+    const blob = new Blob([JSON.stringify({tickets, settings}, null, 2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "chess-club-shop-backup.json";
+    a.click();
+  }
+  function importData(){
+    const inp = document.createElement("input"); inp.type = "file"; inp.accept = ".json";
+    inp.onchange = () => {
+      const r = new FileReader();
+      r.onload = () => {
+        try {
+          const d = JSON.parse(r.result);
+          if (!Array.isArray(d.tickets)) throw 0;
+          tickets = d.tickets;
+          if (d.settings) { settings = d.settings; localStorage.setItem(LS_S, JSON.stringify(settings)); }
+          save(); render(); toast("Backup restored");
+        } catch { toast("Bad backup file"); }
+      };
+      r.readAsText(inp.files[0]);
+    };
+    inp.click();
+  }
+  function toast(msg){
+    const t = $("#toast"); t.innerHTML = msg; t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  // ---------- scanned QR entry: admin.html#new=AB3K9Q ----------
+  (function(){
+    const m = location.hash.match(/new=([A-Z0-9]+)/i);
+    if (m){
+      const id = m[1].toUpperCase();
+      const existing = tickets.find(t => t.id === id);
+      if (existing) openForm(existing.id);
+      else openForm(null, id);
+    }
+  })();
+  render();
+</script>
+</body>
+</html>
