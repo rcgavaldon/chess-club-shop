@@ -6,71 +6,100 @@
 <title>Flyer — Chess Club Shop</title>
 <script src="qrcode.min.js"></script>
 <style>
-  :root{ --ink:#15251b; --paper:#f7f5ec; --green-deep:#0e5230; --green:#1a8049; --green-bright:#28a05e; --cream:#f1eee1; }
+  @font-face{ font-family:'Fraunces'; src:url('fonts/fraunces.woff2') format('woff2'); font-weight:400 900; font-style:normal; font-display:swap; }
+  :root{
+    --bg-deep:#0d2c1f; --green:#1a8049; --green-deep:#0f3325; --card:#f8f6ec; --card-line:#e6e0cd;
+    --ink:#1a2a20; --ink-soft:#5d6d61; --cream:#f2efe2; --square:#e7ead9;
+    --gold:#cca84f; --gold-bright:#e6cd82; --gold-deep:#a9863a; --on-dark:#e9efe6; --on-dark-soft:#9fbaa9;
+    --disp:'Fraunces',Georgia,serif; --mono:'Consolas',ui-monospace,monospace; --body:-apple-system,'Segoe UI',Roboto,sans-serif;
+  }
   *{box-sizing:border-box; margin:0; padding:0;}
-  body{font-family:Georgia,serif; background:#e7ebe3; color:var(--ink);}
-  .toolbar{background:var(--green-deep); color:#fff; padding:12px 16px; display:flex; align-items:center; gap:12px;}
-  .toolbar h1{font-size:16px; margin-right:auto;}
-  .toolbar button{background:#fff; color:var(--green-deep); border:none; border-radius:8px; padding:8px 16px;
-    font-family:'Consolas',monospace; font-weight:bold; cursor:pointer;}
+  body{font-family:var(--body); background:#e7ebe3; color:var(--ink);}
+  .toolbar{background:var(--bg-deep); color:#fff; padding:12px 16px; display:flex; align-items:center; gap:12px;}
+  .toolbar h1{font-size:16px; margin-right:auto; font-family:var(--mono);}
+  .toolbar button{background:var(--gold); color:var(--bg-deep); border:none; border-radius:8px; padding:8px 16px;
+    font-family:var(--mono); font-weight:bold; cursor:pointer;}
   .warn{max-width:7.5in; margin:8px auto 0; padding:8px 12px; font-size:12.5px; color:#8a4b12;
     background:#fdf0dc; border:1px solid #f0cf9a; border-radius:8px; display:none;}
 
-  .page{width:7.5in; height:10in; margin:14px auto; background:var(--paper); box-shadow:0 2px 10px rgba(0,0,0,.15);
+  .page{width:7.5in; height:10in; margin:14px auto; background:var(--card); box-shadow:0 2px 12px rgba(0,0,0,.18);
     display:flex; flex-direction:column; overflow:hidden;}
 
-  .hero{position:relative; color:#fff; text-align:center; padding:.6in .4in .5in; background:var(--green-deep); overflow:hidden;}
-  .hero::before{content:""; position:absolute; inset:0; opacity:.12;
-    background:repeating-conic-gradient(#fff 0% 25%, transparent 0% 50%); background-size:64px 64px;}
+  /* hero */
+  .hero{position:relative; color:#fff; text-align:center; padding:.34in .4in .3in; background:var(--bg-deep); overflow:hidden;}
+  .hero::before{content:""; position:absolute; inset:0; opacity:.10;
+    background:repeating-conic-gradient(#fff 0 25%, transparent 0 50%); background-size:56px 56px;}
+  .hero::after{content:""; position:absolute; inset:0;
+    background:radial-gradient(120% 90% at 50% -10%, rgba(204,168,79,.16), transparent 60%);}
   .hero > *{position:relative;}
-  .hero .knight{font-size:56pt; line-height:1;}
-  .hero h2{font-size:36pt; letter-spacing:1px; margin-top:6px;}
-  .hero p{font-size:14.5pt; color:#d6ead9; margin-top:8px; font-style:italic;}
-  .stripe{height:.12in; background:repeating-linear-gradient(90deg, var(--green) 0 .28in, var(--cream) .28in .56in);}
+  .crest{width:.82in; height:.82in; margin:0 auto .04in; filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));}
+  .hero h2{font-family:var(--disp); font-weight:600; font-size:30pt; letter-spacing:-.5px; line-height:1;}
+  .hero p{font-size:12.5pt; color:var(--on-dark-soft); margin-top:.05in; font-family:var(--disp); font-style:italic;}
+  .hero .school{margin-top:.09in; font-family:var(--mono); font-size:8pt; letter-spacing:2.5px; text-transform:uppercase; color:var(--gold);}
+  .goldline{height:2.5px; background:linear-gradient(90deg,transparent,var(--gold) 15%,var(--gold-bright) 50%,var(--gold) 85%,transparent);}
 
-  .body{flex:1; padding:.35in .5in; display:flex; flex-direction:column;}
-  .tiers{display:flex; gap:.15in; justify-content:center;}
-  .tier{flex:1; text-align:center; background:#fff; border:1.5px solid var(--green); border-radius:12px; padding:.16in .05in;}
-  .tier .p{font-size:23pt; font-weight:bold; color:var(--green-deep); font-family:'Consolas',monospace;}
-  .tier .l{font-size:8.5pt; color:#5f6f63; font-family:'Consolas',monospace; letter-spacing:.5px;}
+  .body{flex:1; padding:.26in .42in .2in; display:flex; flex-direction:column;}
 
-  .pitch{text-align:center; margin-top:.32in; font-size:13.5pt; line-height:1.55;}
-  .pitch b{color:var(--green-deep);}
-  .custom{margin-top:.26in; background:#e8f1e8; border:1.5px solid var(--green); border-radius:12px;
-    padding:.18in .28in; text-align:center; font-size:11.5pt; line-height:1.5;}
+  /* tiers */
+  .tiers{display:flex; gap:.12in; justify-content:center;}
+  .tier{flex:1; text-align:center; background:#fff; border:1.5px solid var(--gold); border-radius:10px; padding:.1in .05in;}
+  .tier .p{font-family:var(--disp); font-size:19pt; font-weight:700; color:var(--green-deep);}
+  .tier .l{font-size:7pt; color:var(--ink-soft); font-family:var(--mono); letter-spacing:.5px;}
 
-  .scanrow{margin-top:auto; display:flex; align-items:center; gap:.4in; justify-content:center; padding-top:.28in;}
-  .qr{width:1.9in; height:1.9in; background:#fff; padding:.12in; border:2.5px solid var(--green-deep); border-radius:12px;
-    display:flex; align-items:center; justify-content:center;}
+  /* section heading */
+  .ey{font-family:var(--mono); font-size:8pt; letter-spacing:2.5px; text-transform:uppercase; color:var(--gold-deep); margin:.2in 0 .02in; text-align:center;}
+  .sech{font-family:var(--disp); font-weight:700; font-size:17pt; color:var(--green-deep); text-align:center; margin-bottom:.12in;}
+
+  /* best sellers grid */
+  .best{display:grid; grid-template-columns:repeat(3,1fr); gap:.14in;}
+  .bcard{background:#fff; border:1px solid var(--card-line); border-radius:11px; overflow:hidden; box-shadow:0 1px 4px rgba(15,51,37,.10); display:flex; flex-direction:column;}
+  .bpic{position:relative; height:1.32in; background:var(--square); overflow:hidden;
+    background-image:repeating-conic-gradient(rgba(15,51,37,.05) 0 25%, transparent 0 50%); background-size:26px 26px;}
+  .bpic img{width:100%; height:100%; object-fit:cover;}
+  .bpic::after{content:""; position:absolute; inset:0 0 auto 0; height:36px; background:linear-gradient(180deg,rgba(10,25,18,.4),transparent);}
+  .bcode{position:absolute; top:6px; left:6px; background:var(--bg-deep); color:var(--gold-bright);
+    font-family:var(--mono); font-size:8pt; font-weight:700; padding:2px 7px; border-radius:6px; border:1px solid rgba(204,168,79,.55);}
+  .binfo{padding:.06in .09in .08in; display:flex; align-items:baseline; justify-content:space-between; gap:6px; flex:1;}
+  .bname{font-family:var(--disp); font-weight:600; font-size:10pt; line-height:1.05; color:var(--ink);}
+  .bprice{font-family:var(--disp); font-weight:700; font-size:14pt; color:var(--green-deep);}
+
+  /* bottom band: custom + scan */
+  .band{margin-top:auto; display:flex; gap:.3in; align-items:center; padding-top:.2in;}
+  .qr{width:1.6in; height:1.6in; flex:0 0 auto; background:#fff; padding:.1in; border:2.5px solid var(--green-deep); border-radius:11px; display:flex; align-items:center; justify-content:center;}
   .qr img, .qr canvas{width:100%!important; height:100%!important;}
-  .scantext{max-width:3.2in;}
-  .scantext .big{font-size:19pt; font-weight:bold; line-height:1.25; color:var(--green-deep);}
-  .scantext .url{font-family:'Consolas',monospace; font-size:9.5pt; color:var(--green); margin-top:8px; word-break:break-all;}
-  .scantext .who{font-size:11pt; margin-top:10px; color:#444;}
+  .bandtext{flex:1;}
+  .bandtext .big{font-family:var(--disp); font-weight:700; font-size:15pt; color:var(--green-deep); line-height:1.1;}
+  .bandtext .url{font-family:var(--mono); font-size:8pt; color:var(--gold-deep); margin-top:5px; word-break:break-all;}
+  .custom{margin-top:.1in; background:var(--square); border-left:3px solid var(--gold); border-radius:8px; padding:.09in .13in; font-size:9.5pt; line-height:1.4;}
+  .custom b{color:var(--green-deep);}
+  .who{font-size:9.5pt; color:#444; margin-top:.09in;}
 
-  .foot{background:var(--green-deep); color:#cfe3d3; text-align:center; font-size:9.5pt; padding:.14in;
-    font-family:'Consolas',monospace; letter-spacing:.5px;}
+  .foot{background:var(--bg-deep); color:#cfe3d3; text-align:center; font-size:8pt; padding:.11in;
+    font-family:var(--mono); letter-spacing:1px;}
 
-  @media print{
-    .toolbar, .warn{display:none!important;}
-    body{background:#fff;}
-    .page{margin:0; box-shadow:none;}
-    @page{size:letter portrait; margin:0.5in;}
-  }
+  @media print{ .toolbar,.warn{display:none!important;} body{background:#fff;} .page{margin:0; box-shadow:none;} @page{size:letter portrait; margin:.5in;} }
 </style>
 </head>
 <body>
 
 <div class="toolbar"><h1>&#9822; Flyer</h1><button onclick="window.print()">&#128424; Print</button></div>
-<p class="warn" id="warn">&#9888; QR library didn't load — the flyer still prints; the URL below is typed out for kids.</p>
+<p class="warn" id="warn">&#9888; QR library didn't load — the flyer still prints; the URL is written out.</p>
 
 <div class="page">
   <div class="hero">
-    <div class="knight">&#9822;</div>
+    <svg class="crest" viewBox="0 0 100 116" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6cd82"/><stop offset="1" stop-color="#a9863a"/></linearGradient></defs>
+      <path d="M6 6 H94 V64 C94 92 72 106 50 114 C28 106 6 92 6 64 Z" fill="#0d2c1f" stroke="url(#g)" stroke-width="4"/>
+      <circle cx="50" cy="40" r="21" fill="none" stroke="url(#g)" stroke-width="2.4"/>
+      <rect x="33" y="23" width="34" height="34" fill="none" stroke="url(#g)" stroke-width="1.4" opacity=".65"/>
+      <text x="50" y="50" font-size="26" text-anchor="middle" fill="#e6cd82" font-family="Georgia,serif">&#9822;</text>
+      <text x="50" y="88" font-size="20" text-anchor="middle" fill="#e6cd82" font-family="Georgia,serif" font-weight="700" letter-spacing="1">DV</text>
+    </svg>
     <h2>CHESS CLUB SHOP</h2>
     <p>Custom 3D prints — made right here at school</p>
+    <div class="school">Da Vinci &middot; Home of the Dragons</div>
   </div>
-  <div class="stripe"></div>
+  <div class="goldline"></div>
 
   <div class="body">
     <div class="tiers">
@@ -80,38 +109,47 @@
       <div class="tier"><div class="p">$5</div><div class="l">PREMIUM</div></div>
     </div>
 
-    <p class="pitch">
-      Fidget clickers &middot; bubble poppers &middot; Pok&eacute;balls &middot; spinners &middot; sliding puzzles &middot; keychains —
-      printed in <b>your colors</b>. Pay cash at pickup. Every sale supports the <b>chess club</b>.
-    </p>
+    <div class="ey">&#9819; student favorites</div>
+    <div class="sech">Best Sellers</div>
+    <div class="best" id="best"></div>
 
-    <div class="custom">
-      <b>Want something custom?</b> See a cool print online (MakerWorld / Bambu Handy)?
-      Send the link and get a quote — most customs run $3&ndash;$8. School-appropriate stuff only.
-    </div>
-
-    <div class="scanrow">
+    <div class="band">
       <div class="qr" id="qr"></div>
-      <div class="scantext">
+      <div class="bandtext">
         <div class="big">Scan to browse the full catalog &rarr;</div>
         <div class="url" id="url"></div>
+        <div class="custom"><b>Want something custom?</b> See a print you like online (MakerWorld / Bambu Handy)? Send the link for a quote — most run $3&ndash;$8. School-appropriate only.</div>
         <div class="who" id="who"></div>
       </div>
     </div>
   </div>
 
-  <div class="foot">&#9822; CHESS CLUB SHOP &middot; NEW ITEMS ADDED ALL YEAR</div>
+  <div class="foot">&#9822; CHESS CLUB SHOP &middot; PAY CASH AT PICKUP &middot; EVERY SALE SUPPORTS THE CHESS CLUB</div>
 </div>
 
 <script src="catalog.js"></script>
 <script>
+  // best sellers: curated codes, fall back to featured, then fill to 6
+  const WANT = ["2-A","3-A","3-B","3-C","4-B","5-A"];
+  let best = WANT.map(c => ITEMS.find(i => i.code === c)).filter(Boolean);
+  if(best.length < 6){
+    const extra = [...ITEMS.filter(i=>i.featured), ...ITEMS].filter(i => !best.includes(i));
+    for(const it of extra){ if(best.length>=6) break; if(!best.includes(it)) best.push(it); }
+  }
+  best = best.slice(0,6);
+  document.getElementById("best").innerHTML = best.map(it => `
+    <div class="bcard">
+      <div class="bpic">${it.image?`<img src="${it.image}" alt="${it.name}">`:`<span style="display:flex;height:100%;align-items:center;justify-content:center;font-size:40px;color:#adc7b4">&#9822;</span>`}<span class="bcode">${it.code}</span></div>
+      <div class="binfo"><span class="bname">${it.name}</span><span class="bprice">$${it.tier}</span></div>
+    </div>`).join("");
+
   document.getElementById("url").textContent = SHOP.url;
   document.getElementById("who").textContent = SHOP.findMe + ".";
-  if (typeof QRCode !== "undefined"){
-    new QRCode(document.getElementById("qr"), {text: SHOP.url, width: 300, height: 300, correctLevel: QRCode.CorrectLevel.M});
+  if(typeof QRCode !== "undefined"){
+    new QRCode(document.getElementById("qr"), {text:SHOP.url, width:300, height:300, correctLevel:QRCode.CorrectLevel.M});
   } else {
-    document.getElementById("warn").style.display = "block";
-    document.getElementById("qr").innerHTML = '<span style="font-size:8pt;color:#999;text-align:center">QR<br>unavailable</span>';
+    document.getElementById("warn").style.display="block";
+    document.getElementById("qr").innerHTML = '<span style="font-size:8pt;color:#999;text-align:center">QR unavailable</span>';
   }
 </script>
 </body>
