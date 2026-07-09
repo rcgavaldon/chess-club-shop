@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Print Pack — Chess Club Shop</title>
+<script src="qrcode.min.js"></script>
+<style>
+  :root{ --ink:#15251b; --paper:#f7f5ec; --deep:#0e5230; --green:#1a8049; --bright:#28a05e; --cream:#f1eee1; --line:#b9c9bc; }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:Georgia,serif; background:#e7ebe3; color:var(--ink);}
+
+  .toolbar{background:var(--deep); color:#fff; padding:12px 16px; display:flex; align-items:center; gap:14px;
+    flex-wrap:wrap; position:sticky; top:0; z-index:10;}
+  .toolbar h1{font-size:16px; margin-right:auto;}
+  .toolbar label{font-size:13px; font-family:'Consolas',monospace;}
+  .toolbar input{width:56px; padding:5px 8px; border-radius:6px; border:none; font-size:14px;}
+  .toolbar button{background:#fff; color:var(--deep); border:none; border-radius:8px; padding:8px 16px;
+    font-family:'Consolas',monospace; font-weight:bold; font-size:13px; cursor:pointer;}
+  .toolbar button.ghost{background:none; border:1px solid rgba(255,255,255,.5); color:#fff;}
+  .hint{max-width:7.5in; margin:12px auto; font-size:13px; color:#4a5a4e; padding:0 10px;}
+  .warn{max-width:7.5in; margin:8px auto; padding:8px 12px; font-size:12.5px; color:#8a4b12;
+    background:#fdf0dc; border:1px solid #f0cf9a; border-radius:8px; display:none;}
+
+  /* ===== FLYER PAGE ===== */
+  .flyer{width:7.5in; height:10in; margin:14px auto; background:var(--paper); box-shadow:0 2px 10px rgba(0,0,0,.15);
+    display:flex; flex-direction:column; overflow:hidden; break-after:page;}
+  .hero{position:relative; color:#fff; text-align:center; padding:.6in .4in .5in; background:var(--deep); overflow:hidden;}
+  .hero::before{content:""; position:absolute; inset:0; opacity:.12;
+    background:repeating-conic-gradient(#fff 0% 25%, transparent 0% 50%); background-size:64px 64px;}
+  .hero > *{position:relative;}
+  .hero .knight{font-size:56pt; line-height:1;}
+  .hero h2{font-size:36pt; letter-spacing:1px; margin-top:6px;}
+  .hero p{font-size:14.5pt; color:#d6ead9; margin-top:8px; font-style:italic;}
+  .fstripe{height:.12in; background:repeating-linear-gradient(90deg, var(--green) 0 .28in, var(--cream) .28in .56in);}
+  .fbody{flex:1; padding:.35in .5in; display:flex; flex-direction:column;}
+  .tiers{display:flex; gap:.15in; justify-content:center;}
+  .tier{flex:1; text-align:center; background:#fff; border:1.5px solid var(--green); border-radius:12px; padding:.16in .05in;}
+  .tier .p{font-size:23pt; font-weight:bold; color:var(--deep); font-family:'Consolas',monospace;}
+  .tier .l{font-size:8.5pt; color:#5f6f63; font-family:'Consolas',monospace; letter-spacing:.5px;}
+  .pitch{text-align:center; margin-top:.32in; font-size:13.5pt; line-height:1.55;}
+  .pitch b{color:var(--deep);}
+  .custom{margin-top:.26in; background:#e8f1e8; border:1.5px solid var(--green); border-radius:12px;
+    padding:.18in .28in; text-align:center; font-size:11.5pt; line-height:1.5;}
+  .scanrow{margin-top:auto; display:flex; align-items:center; gap:.4in; justify-content:center; padding-top:.28in;}
+  .fqr{width:1.9in; height:1.9in; background:#fff; padding:.12in; border:2.5px solid var(--deep); border-radius:12px;
+    display:flex; align-items:center; justify-content:center;}
+  .fqr img, .fqr canvas{width:100%!important; height:100%!important;}
+  .scantext{max-width:3.2in;}
+  .scantext .big{font-size:19pt; font-weight:bold; line-height:1.25; color:var(--deep);}
+  .scantext .url{font-family:'Consolas',monospace; font-size:9.5pt; color:var(--green); margin-top:8px; word-break:break-all;}
+  .scantext .who{font-size:11pt; margin-top:10px; color:#444;}
+  .ffoot{background:var(--deep); color:#cfe3d3; text-align:center; font-size:9.5pt; padding:.14in;
+    font-family:'Consolas',monospace; letter-spacing:.5px;}
+
+  /* ===== ORDER-CARD SHEETS ===== */
+  .sheet{width:7in; margin:14px auto; background:#fff; display:grid; grid-template-columns:3.5in 3.5in;
+    box-shadow:0 2px 10px rgba(0,0,0,.15); break-after:page;}
+  .card{width:3.5in; height:2in; border:1px dashed var(--line); padding:.14in .16in;
+    display:flex; gap:.12in; overflow:hidden; break-inside:avoid;}
+  .fields{flex:1; display:flex; flex-direction:column; font-size:9.5pt;}
+  .brand{font-family:'Consolas',monospace; font-size:7.5pt; letter-spacing:1px; color:var(--green);
+    text-transform:uppercase; margin-bottom:.05in; font-weight:bold;}
+  .fl{display:flex; align-items:baseline; gap:5px; flex:1;}
+  .fl .lab{font-size:8pt; color:#555; white-space:nowrap; font-family:'Consolas',monospace;}
+  .fl .line{flex:1; border-bottom:1px solid #999;}
+  .qrside{width:1in; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.05in;}
+  .cqr{width:.85in; height:.85in; display:flex; align-items:center; justify-content:center;}
+  .cqr img, .cqr canvas{width:100%!important; height:100%!important;}
+  .cqr .fallback{font-size:6pt; color:#999; text-align:center; font-family:'Consolas',monospace;}
+  .tid{font-family:'Consolas',monospace; font-weight:bold; font-size:10pt; letter-spacing:1px; color:var(--deep);}
+
+  @media print{
+    .toolbar, .hint, .warn{display:none!important;}
+    body{background:#fff;}
+    .flyer, .sheet{margin:0; box-shadow:none;}
+    @page{size:letter portrait; margin:0.5in;}
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>&#9822; Print Pack — flyer + order cards</h1>
+  <label>Card sheets: <input type="number" id="nSheets" value="2" min="0" max="10"></label>
+  <button class="ghost" onclick="build()">&#8635; New card IDs</button>
+  <button onclick="window.print()">&#128424; Print / Save as PDF</button>
+</div>
+<p class="hint">One document: <b>page&nbsp;1 is the flyer</b>, then each following page is a sheet of 10 order cards with fresh QR ticket numbers.
+Hit <b>Print / Save as PDF</b> and choose "Save as PDF" for a single file with everything. Set card sheets to 0 to print just the flyer.</p>
+<p class="warn" id="warn">&#9888; QR library didn't load — pages still print; ticket #s are typed on each card and the flyer URL is written out.</p>
+
+<div id="pack"></div>
+
+<script src="catalog.js"></script>
+<script>
+  const hasQR = typeof QRCode !== "undefined";
+  const ADMIN_URL = SHOP.url.replace(/\/$/, "") + "/admin.html";
+  const abc = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+  const newId = () => Array.from({length:6}, () => abc[Math.floor(Math.random()*abc.length)]).join("");
+
+  function flyerHtml(){
+    return `<div class="flyer">
+      <div class="hero"><div class="knight">&#9822;</div><h2>CHESS CLUB SHOP</h2>
+        <p>Custom 3D prints — made right here at school</p></div>
+      <div class="fstripe"></div>
+      <div class="fbody">
+        <div class="tiers">
+          <div class="tier"><div class="p">$2</div><div class="l">SMALL</div></div>
+          <div class="tier"><div class="p">$3</div><div class="l">CLASSIC</div></div>
+          <div class="tier"><div class="p">$4</div><div class="l">BIG</div></div>
+          <div class="tier"><div class="p">$5</div><div class="l">PREMIUM</div></div>
+        </div>
+        <p class="pitch">Fidget clickers &middot; bubble poppers &middot; Pok&eacute;balls &middot; spinners &middot; sliding puzzles &middot; keychains —
+          printed in <b>your colors</b>. Pay cash at pickup. Every sale supports the <b>chess club</b>.</p>
+        <div class="custom"><b>Want something custom?</b> See a cool print online (MakerWorld / Bambu Handy)?
+          Send the link and get a quote — most customs run $3&ndash;$8. School-appropriate stuff only.</div>
+        <div class="scanrow">
+          <div class="fqr" id="fqr"></div>
+          <div class="scantext"><div class="big">Scan to browse the full catalog &rarr;</div>
+            <div class="url">${SHOP.url}</div><div class="who">${SHOP.findMe}.</div></div>
+        </div>
+      </div>
+      <div class="ffoot">&#9822; CHESS CLUB SHOP &middot; NEW ITEMS ADDED ALL YEAR</div>
+    </div>`;
+  }
+  function cardHtml(id){
+    return `<div class="card"><div class="fields">
+      <div class="brand">&#9822; Chess Club Shop &mdash; Order</div>
+      <div class="fl"><span class="lab">Name</span><span class="line"></span></div>
+      <div class="fl"><span class="lab">1st period</span><span class="line"></span></div>
+      <div class="fl"><span class="lab">Item #</span><span class="line"></span><span class="lab">$</span><span class="line" style="max-width:.5in"></span></div>
+      <div class="fl"><span class="lab">Colors</span><span class="line"></span></div>
+      <div class="fl"><span class="lab">Notes</span><span class="line"></span></div>
+    </div><div class="qrside">
+      <div class="cqr" id="cqr-${id}">${hasQR ? "" : '<span class="fallback">'+SHOP.url+' #new='+id+'</span>'}</div>
+      <div class="tid">${id}</div></div></div>`;
+  }
+
+  function build(){
+    if(!hasQR) document.getElementById("warn").style.display="block";
+    const n = Math.min(10, Math.max(0, parseInt(document.getElementById("nSheets").value) || 0));
+    const cardIds = new Set();
+    let html = flyerHtml();
+    for(let s=0; s<n; s++){
+      const ids=[]; while(ids.length<10){ const id=newId(); if(!cardIds.has(id)){cardIds.add(id); ids.push(id);} }
+      html += `<div class="sheet">${ids.map(cardHtml).join("")}</div>`;
+    }
+    document.getElementById("pack").innerHTML = html;
+    if(hasQR){
+      new QRCode(document.getElementById("fqr"), {text:SHOP.url, width:300, height:300, correctLevel:QRCode.CorrectLevel.M});
+      cardIds.forEach(id => new QRCode(document.getElementById("cqr-"+id),
+        {text:`${ADMIN_URL}#new=${id}`, width:120, height:120, correctLevel:QRCode.CorrectLevel.M}));
+    }
+  }
+  build();
+</script>
+</body>
+</html>
