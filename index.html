@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0d2c1f">
+<meta name="theme-color" content="#2f7d32">
 <title>Chess Club Shop — 3D Prints</title>
 <style>
   @font-face{
@@ -11,61 +11,68 @@
     font-weight:400 900; font-style:normal; font-display:swap;
   }
   :root{
-    --bg:#123a29; --bg-deep:#0d2c1f; --bg-line:#1c4d38;
-    --card:#f8f6ec; --card-line:#e6e0cd; --ink:#1a2a20; --ink-soft:#5d6d61;
-    --cream:#f2efe2; --square:#e7ead9;
-    --gold:#cca84f; --gold-bright:#e6cd82; --gold-deep:#a9863a;
-    --green:#28a05e; --green-deep:#0f3325;
-    --on-dark:#e9efe6; --on-dark-soft:#9fbaa9; --danger:#c05640;
+    --bg:#f4f7f0; --bg-deep:#1d5424; --bg-line:#e2e7dc;
+    --card:#ffffff; --card-line:#e4eadd; --ink:#1b2a1f; --ink-soft:#5f6f62;
+    --cream:#eef4e8; --square:#eef3e8; --mint:#e9f4e2; --mint-line:#d3e6c9;
+    --gold:#c9a43a; --gold-bright:#dcbf6a; --gold-deep:#9c7d2e;
+    --green:#2f7d32; --green-bright:#3a9a3f; --green-deep:#1d5424;
+    --on-dark:#eef4ea; --on-dark-soft:#bccdbf; --danger:#c05640;
     --display:'Fraunces',Georgia,'Times New Roman',serif;
     --body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
     --mono:ui-monospace,'Consolas','SF Mono',Menlo,monospace;
-    --shadow:0 2px 6px rgba(0,0,0,.18), 0 14px 34px rgba(0,0,0,.20);
-    --shadow-lg:0 10px 20px rgba(0,0,0,.26), 0 30px 60px rgba(0,0,0,.30);
+    --shadow:0 1px 2px rgba(20,45,25,.06), 0 8px 22px rgba(20,45,25,.07);
+    --shadow-lg:0 8px 16px rgba(20,45,25,.12), 0 22px 46px rgba(20,45,25,.10);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
-  body{font-family:var(--body); background:var(--bg); color:var(--on-dark); line-height:1.55;
+  body{font-family:var(--body); background:var(--bg); color:var(--ink); line-height:1.55;
     -webkit-font-smoothing:antialiased;
-    background-image:repeating-conic-gradient(rgba(255,255,255,.014) 0 25%, transparent 0 50%);
+    background-image:repeating-conic-gradient(rgba(47,125,50,.022) 0 25%, transparent 0 50%);
     background-size:72px 72px; background-attachment:fixed;}
   .mono{font-family:var(--mono);}
-  a{color:var(--gold-bright);}
+  a{color:var(--green);}
   @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} *{transition:none!important;} }
 
   /* ================= HERO ================= */
-  header{position:relative; text-align:center; padding:24px 18px 20px; overflow:hidden; background:var(--bg-deep);}
+  header{position:relative; text-align:center; padding:26px 18px 22px; overflow:hidden; background:var(--mint); border-bottom:1px solid var(--mint-line);}
   header::before{content:""; position:absolute; inset:0;
     background:repeating-conic-gradient(rgba(204,168,79,.05) 0 25%, transparent 0 50%); background-size:66px 66px;}
   header::after{content:""; position:absolute; inset:0; pointer-events:none;
     background:radial-gradient(120% 90% at 50% -10%, rgba(204,168,79,.14), transparent 60%);}
   header > *{position:relative; z-index:1;}
 
-  .crest{width:72px; height:72px; margin:0 auto 6px; display:block; filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));}
-  header h1{font-family:var(--display); font-weight:600; font-size:clamp(30px,5.4vw,44px); color:#fff;
+  .herotop{display:flex; align-items:center; justify-content:center; gap:clamp(14px,4vw,32px); margin-bottom:8px;}
+  .herotop .divider{width:1px; height:44px; background:linear-gradient(180deg,transparent,var(--mint-line),transparent);}
+  .crest{width:60px; height:auto; margin:0; display:block; filter:drop-shadow(0 4px 10px rgba(0,0,0,.22));}
+  .dvlogo{height:52px; width:auto; display:block;}
+  header h1{font-family:var(--display); font-weight:600; font-size:clamp(30px,5.4vw,44px); color:var(--green-deep);
     letter-spacing:-.5px; line-height:1.02; text-wrap:balance;}
-  header h1 .amp{color:var(--gold-bright);}
-  header .tag{color:var(--on-dark-soft); font-size:14.5px; margin-top:5px; font-family:var(--display); font-style:italic;}
+  header h1 .amp{color:var(--gold-deep);}
+  header .tag{color:var(--ink-soft); font-size:14.5px; margin-top:5px; font-family:var(--display); font-style:italic;}
   header .school{margin-top:9px; font-family:var(--mono); font-size:10px; letter-spacing:2.5px; text-transform:uppercase;
     color:var(--gold); display:flex; align-items:center; gap:10px; justify-content:center;}
   header .school::before, header .school::after{content:""; width:26px; height:1px; background:linear-gradient(90deg,transparent,var(--gold));}
   header .school::after{background:linear-gradient(90deg,var(--gold),transparent);}
 
   .shopby{margin-top:16px;}
-  .shopby .lbl{font-family:var(--mono); font-size:10.5px; letter-spacing:2.5px; color:var(--on-dark-soft);
+  .shopby .lbl{font-family:var(--mono); font-size:10.5px; letter-spacing:2.5px; color:var(--ink-soft);
     text-transform:uppercase; display:block; margin-bottom:8px;}
   .price-nav{display:inline-flex; gap:9px; flex-wrap:wrap; justify-content:center;}
   .pchip{display:inline-flex; align-items:baseline; gap:6px; text-decoration:none; cursor:pointer;
-    background:rgba(204,168,79,.08); border:1.5px solid rgba(204,168,79,.5); color:var(--gold-bright);
+    background:#fff; border:1.5px solid var(--green); color:var(--green-deep);
     border-radius:11px; padding:8px 15px; font-family:var(--display); font-weight:600; font-size:17px;
+    box-shadow:0 1px 2px rgba(20,45,25,.06);
     transition:transform .14s, background .14s, color .14s, border-color .14s;}
-  .pchip:hover{background:var(--gold); color:var(--bg-deep); border-color:var(--gold); transform:translateY(-2px);}
+  .pchip:hover{background:var(--green); color:#fff; border-color:var(--green); transform:translateY(-2px);}
   .pchip .n{font-family:var(--mono); font-size:10px; font-weight:400; opacity:.75; letter-spacing:.5px;}
 
   .goldline{height:2px; background:linear-gradient(90deg,transparent,var(--gold) 20%,var(--gold-bright) 50%,var(--gold) 80%,transparent);}
   @media (max-width:560px){
     header{padding:16px 16px 14px;}
-    .crest{width:54px; height:54px; margin-bottom:4px;}
+    .herotop{gap:16px; margin-bottom:6px;}
+    .crest{width:46px;}
+    .dvlogo{height:40px;}
+    .herotop .divider{height:36px;}
     header h1{font-size:29px;}
     header .tag{font-size:13px; margin-top:4px;}
     header .school{margin-top:7px; font-size:9px; letter-spacing:2px;}
@@ -77,26 +84,27 @@
   }
 
   /* ================= NAV ================= */
-  nav{position:sticky; top:0; z-index:20; background:rgba(13,44,31,.90); backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--bg-line); display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  nav{position:sticky; top:0; z-index:20; background:rgba(255,255,255,.94); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--bg-line); display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch;
+    box-shadow:0 1px 4px rgba(20,45,25,.05);}
   nav::-webkit-scrollbar{display:none;}
-  nav a{flex:0 0 auto; padding:14px 16px; text-decoration:none; color:var(--on-dark-soft);
+  nav a{flex:0 0 auto; padding:14px 16px; text-decoration:none; color:var(--ink-soft);
     font-family:var(--mono); font-size:12.5px; white-space:nowrap; border-bottom:2.5px solid transparent;
     transition:color .14s, border-color .14s;}
-  nav a:hover{color:var(--gold-bright);}
-  nav a.active{border-bottom-color:var(--gold); color:var(--gold-bright); font-weight:700;}
+  nav a:hover{color:var(--green);}
+  nav a.active{border-bottom-color:var(--green); color:var(--green-deep); font-weight:700;}
 
   main{max-width:1160px; margin:0 auto; padding:20px 14px 44px;}
   section{margin-top:40px; scroll-margin-top:56px;}
   main > section:first-child{margin-top:4px;}
   @media (min-width:760px){ main{padding:24px 22px 48px;} section{margin-top:50px;} }
   .h2wrap{margin-bottom:20px;}
-  .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:2.5px; color:var(--gold);
+  .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:2.5px; color:var(--gold-deep);
     text-transform:uppercase; display:flex; align-items:center; gap:7px; margin-bottom:5px;}
-  h2{font-family:var(--display); font-weight:600; font-size:clamp(26px,5vw,36px); color:#fff;
+  h2{font-family:var(--display); font-weight:600; font-size:clamp(26px,5vw,36px); color:var(--green-deep);
     letter-spacing:-.3px; text-wrap:balance;}
-  .sub{color:var(--on-dark-soft); font-size:14.5px; margin-top:8px; max-width:62ch;}
-  .sub .mono{color:var(--gold-bright); background:rgba(204,168,79,.12); padding:1px 6px; border-radius:5px; font-size:13px;}
+  .sub{color:var(--ink-soft); font-size:14.5px; margin-top:8px; max-width:62ch;}
+  .sub .mono{color:var(--green-deep); background:var(--mint); padding:1px 6px; border-radius:5px; font-size:13px;}
 
   /* ================= ITEM CARDS ================= */
   /* responsive product grid: 2-up on phones → 5-up on desktop */
@@ -133,14 +141,13 @@
   .item .meta{font-family:var(--mono); font-size:11px; color:var(--ink-soft);}
   .item .price{margin-top:auto; padding-top:9px; font-family:var(--display); font-weight:700; font-size:23px; color:var(--green-deep);}
 
-  .tierhead{display:flex; align-items:center; gap:11px; margin:26px 0 14px; padding:9px 12px;
-    background:linear-gradient(90deg, rgba(204,168,79,.18), rgba(204,168,79,.04));
-    border:1px solid rgba(204,168,79,.45); border-left:4px solid var(--gold); border-radius:12px;
-    position:sticky; top:44px; z-index:5; backdrop-filter:blur(6px); background-color:rgba(13,44,31,.82);}
-  .tierhead .pill{font-family:var(--display); font-weight:700; font-size:20px; color:var(--bg-deep);
+  .tierhead{display:flex; align-items:center; gap:11px; margin:26px 0 14px; padding:10px 13px;
+    background:var(--green-deep); border-left:5px solid var(--gold); border-radius:10px;
+    position:sticky; top:44px; z-index:5; box-shadow:0 3px 10px rgba(20,45,25,.14);}
+  .tierhead .pill{font-family:var(--display); font-weight:700; font-size:20px; color:var(--green-deep);
     background:var(--gold-bright); border-radius:8px; padding:2px 12px; line-height:1.18;}
   .tierhead .tlabel{font-family:var(--display); font-weight:600; font-size:18px; color:#fff; letter-spacing:.2px;}
-  .tierhead .cnt{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--gold-bright); opacity:.9;}
+  .tierhead .cnt{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--gold-bright); opacity:.95;}
 
   /* ================= COLORS ================= */
   .chips{display:flex; flex-wrap:wrap; gap:12px;}
@@ -161,14 +168,14 @@
   .panel label{display:block; font-family:var(--mono); font-size:12px; color:var(--ink-soft); margin:15px 0 5px;}
   .panel input, .panel textarea{width:100%; padding:11px 13px; border:1.5px solid var(--card-line); border-radius:10px;
     font-family:var(--body); font-size:15px; background:#fff; color:var(--ink); transition:border .14s;}
-  .panel input:focus, .panel textarea:focus{outline:none; border-color:var(--gold);}
+  .panel input:focus, .panel textarea:focus{outline:none; border-color:var(--green);}
   .panel textarea{min-height:74px; resize:vertical;}
   .btnrow{display:flex; gap:11px; margin-top:20px; flex-wrap:wrap;}
   .btn{border:none; border-radius:11px; padding:13px 22px; font-size:14px; cursor:pointer;
     font-family:var(--mono); font-weight:700; transition:transform .12s, background .14s; letter-spacing:.3px;}
-  .btn.green{background:var(--green-deep); color:var(--gold-bright); border:1px solid var(--gold);}
-  .btn.green:hover{background:#123f2c;}
-  .btn.outline{background:transparent; color:var(--green-deep); border:1.5px solid var(--green-deep);}
+  .btn.green{background:var(--green); color:#fff; border:none;}
+  .btn.green:hover{background:var(--green-bright);}
+  .btn.outline{background:#fff; color:var(--green-deep); border:1.5px solid var(--green);}
   .btn:active{transform:translateY(1px);}
   .note{font-size:13px; color:var(--ink-soft); margin-top:13px;}
   .pricing-box{background:var(--card); border:1px solid var(--card-line); border-left:4px solid var(--gold);
@@ -229,19 +236,22 @@
 <body>
 
 <header>
-  <svg class="crest" viewBox="0 0 100 116" aria-label="Da Vinci crest" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#e6cd82"/><stop offset="1" stop-color="#a9863a"/>
-      </linearGradient>
-    </defs>
-    <path d="M6 6 H94 V64 C94 92 72 106 50 114 C28 106 6 92 6 64 Z" fill="#0d2c1f" stroke="url(#g)" stroke-width="4"/>
-    <circle cx="50" cy="40" r="21" fill="none" stroke="url(#g)" stroke-width="2.4"/>
-    <rect x="33" y="23" width="34" height="34" fill="none" stroke="url(#g)" stroke-width="1.4" opacity=".65"/>
-    <!-- Vitruvian knight: a chess knight standing in for da Vinci's figure -->
-    <text x="50" y="50" font-size="26" text-anchor="middle" fill="#e6cd82" font-family="Georgia,serif">&#9822;</text>
-    <text x="50" y="88" font-size="20" text-anchor="middle" fill="#e6cd82" font-family="Georgia,serif" font-weight="700" letter-spacing="1">DV</text>
-  </svg>
+  <div class="herotop">
+    <svg class="crest" viewBox="0 0 100 116" aria-label="Chess Club crest" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#e6cd82"/><stop offset="1" stop-color="#a9863a"/>
+        </linearGradient>
+      </defs>
+      <path d="M6 6 H94 V64 C94 92 72 106 50 114 C28 106 6 92 6 64 Z" fill="#16160f" stroke="url(#g)" stroke-width="4"/>
+      <circle cx="50" cy="40" r="21" fill="none" stroke="url(#g)" stroke-width="2.4"/>
+      <rect x="33" y="23" width="34" height="34" fill="none" stroke="url(#g)" stroke-width="1.4" opacity=".65"/>
+      <text x="50" y="50" font-size="26" text-anchor="middle" fill="#e6cd82" font-family="Georgia,serif">&#9822;</text>
+      <text x="50" y="90" font-size="21" text-anchor="middle" fill="#3a9a3f" font-family="Georgia,serif" font-weight="700" letter-spacing="1">DV</text>
+    </svg>
+    <span class="divider"></span>
+    <img class="dvlogo" src="img/dv-official.png" width="783" height="346" alt="Da Vinci School for Science &amp; the Arts">
+  </div>
   <h1 id="shopName">Chess Club Shop</h1>
   <p class="tag" id="shopTag">3D prints, made at school</p>
   <div class="school">Da Vinci &middot; Home of the Dragons</div>
