@@ -63,6 +63,18 @@
   .pchip .n{font-family:var(--mono); font-size:10px; font-weight:400; opacity:.75; letter-spacing:.5px;}
 
   .goldline{height:2px; background:linear-gradient(90deg,transparent,var(--gold) 20%,var(--gold-bright) 50%,var(--gold) 80%,transparent);}
+  @media (max-width:560px){
+    header{padding:16px 16px 14px;}
+    .crest{width:54px; height:54px; margin-bottom:4px;}
+    header h1{font-size:29px;}
+    header .tag{font-size:13px; margin-top:4px;}
+    header .school{margin-top:7px; font-size:9px; letter-spacing:2px;}
+    .shopby{margin-top:11px;}
+    .shopby .lbl{margin-bottom:6px; font-size:9.5px; letter-spacing:1.8px;}
+    .pchip{padding:6px 11px; font-size:15px; border-radius:9px;}
+    .tierhead{top:42px;}
+    .tierhead .pill{font-size:18px; padding:2px 10px;} .tierhead .tlabel{font-size:16px;}
+  }
 
   /* ================= NAV ================= */
   nav{position:sticky; top:0; z-index:20; background:rgba(13,44,31,.90); backdrop-filter:blur(10px);
@@ -121,11 +133,14 @@
   .item .meta{font-family:var(--mono); font-size:11px; color:var(--ink-soft);}
   .item .price{margin-top:auto; padding-top:9px; font-family:var(--display); font-weight:700; font-size:23px; color:var(--green-deep);}
 
-  .tierhead{display:flex; align-items:baseline; gap:12px; margin:34px 0 16px;}
-  .tierhead .rank{font-family:var(--display); font-weight:700; font-size:23px; color:#fff;}
-  .tierhead .rank .d{color:var(--gold-bright);}
-  .tierhead .rule{flex:1; height:1px; background:var(--bg-line);}
-  .tierhead .cnt{font-family:var(--mono); font-size:11px; color:var(--on-dark-soft);}
+  .tierhead{display:flex; align-items:center; gap:11px; margin:26px 0 14px; padding:9px 12px;
+    background:linear-gradient(90deg, rgba(204,168,79,.18), rgba(204,168,79,.04));
+    border:1px solid rgba(204,168,79,.45); border-left:4px solid var(--gold); border-radius:12px;
+    position:sticky; top:44px; z-index:5; backdrop-filter:blur(6px); background-color:rgba(13,44,31,.82);}
+  .tierhead .pill{font-family:var(--display); font-weight:700; font-size:20px; color:var(--bg-deep);
+    background:var(--gold-bright); border-radius:8px; padding:2px 12px; line-height:1.18;}
+  .tierhead .tlabel{font-family:var(--display); font-weight:600; font-size:18px; color:#fff; letter-spacing:.2px;}
+  .tierhead .cnt{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--gold-bright); opacity:.9;}
 
   /* ================= COLORS ================= */
   .chips{display:flex; flex-wrap:wrap; gap:12px;}
@@ -367,7 +382,7 @@
   $("#tiers").innerHTML = tiers.map(t => {
     const items = ITEMS.filter(i=>i.tier===t);
     return `<div id="tier-${t}" style="scroll-margin-top:60px">
-      <div class="tierhead"><span class="rank"><span class="d">$${t}</span> · ${TIER_LABEL[t]||"Tier"}</span><span class="rule"></span><span class="cnt">${items.length} item${items.length!==1?"s":""}</span></div>
+      <div class="tierhead"><span class="pill">$${t}</span><span class="tlabel">${TIER_LABEL[t]||"Tier"}</span><span class="cnt">${items.length} item${items.length!==1?"s":""}</span></div>
       <div class="grid">${items.map(itemCard).join("")}</div>
     </div>`;
   }).join("");
